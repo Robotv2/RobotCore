@@ -1,0 +1,4 @@
+name: RobotCore
+version: '${project.version}'
+main: fr.robotv2.robotcore.RobotCore
+api-version: 1.18
