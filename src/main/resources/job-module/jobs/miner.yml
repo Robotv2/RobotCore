@@ -1,0 +1,25 @@
+id: miner
+display: "&c&lMiner"
+color: red
+actions:
+  BREAK:
+    diamond_ore:
+      money: 10
+      exp: 10
+    gold_ore:
+      money: 5
+      exp: 5
+    coal_ore:
+      money: 2
+      exp: 2
+    stone:
+      money: 0.01
+      exp: 0.01
+  KILL:
+    player:
+      money: 50
+      exp: 20
+    cow:
+      money: 10
+      exp: 10
+

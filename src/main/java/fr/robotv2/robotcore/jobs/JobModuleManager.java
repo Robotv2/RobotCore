@@ -1,0 +1,135 @@
+package fr.robotv2.robotcore.jobs;
+
+import fr.robotv2.robotcore.RobotCore;
+import fr.robotv2.robotcore.api.StringUtil;
+import fr.robotv2.robotcore.api.config.Config;
+import fr.robotv2.robotcore.api.config.ConfigAPI;
+import fr.robotv2.robotcore.jobs.data.DataHandler;
+import fr.robotv2.robotcore.jobs.events.EventCaller;
+import fr.robotv2.robotcore.jobs.impl.Job;
+import fr.robotv2.robotcore.jobs.listeners.PlayerEvents;
+import fr.robotv2.robotcore.jobs.listeners.SystemEvents;
+import fr.robotv2.robotcore.jobs.manager.LevelManager;
+import fr.robotv2.robotcore.jobs.manager.PlayerManager;
+import fr.robotv2.robotcore.jobs.util.BossBarJob;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.PluginManager;
+
+import java.io.File;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
+public class JobModuleManager {
+
+    private final RobotCore plugin;
+    private final EventCaller caller;
+    private final BossBarJob bossBarJob;
+
+    private final LevelManager levelManager;
+    private final PlayerManager playerManager;
+    private final DataHandler dataHandler;
+
+    private final Map<String, Job> jobs = new HashMap<>();
+
+    private final String PATH_TO_CONFIG = "job-module" + File.separator + "config";
+
+    public JobModuleManager(RobotCore plugin) {
+        this.plugin = plugin;
+        this.dataHandler = new DataHandler();
+        this.dataHandler.initializeStorage(this, this.getConfig());
+        this.levelManager = new LevelManager(this);
+        this.playerManager = new PlayerManager(this);
+        this.caller = new EventCaller(this);
+        this.bossBarJob = new BossBarJob(this);
+
+        loadJobsFromDataFolder();
+        registerListener();
+    }
+
+    private void loadJobsFromDataFolder() {
+        jobs.clear();
+        File dataFolder = new File(plugin.getDataFolder() + File.separator + "job-module" + File.separator + "jobs");
+        File[] files = dataFolder.listFiles();
+        if(files != null) {
+            Arrays.stream(files).filter(File::isFile).forEach(this::registerJob);
+        }
+    }
+
+    //<-- GETTERS -->//
+
+        //<-- JOBS ->>
+
+    public Job getJob(String id) {
+        return jobs.get(id);
+    }
+
+    public Collection<Job> getJobs() {
+        return jobs.values();
+    }
+
+        //<-- CLASSES ->>
+
+    public DataHandler getDataHandler() {
+        return dataHandler;
+    }
+
+    public EventCaller getCaller() {
+        return caller;
+    }
+
+    public BossBarJob getBossBarJob() {
+        return bossBarJob;
+    }
+
+    public LevelManager getLevelManager() {
+        return levelManager;
+    }
+
+    public PlayerManager getPlayerManager() {
+        return playerManager;
+    }
+
+
+        //<-- PLUGIN -->
+
+    public RobotCore getPlugin() {
+        return plugin;
+    }
+
+        //<-- CONFIGURATION -->
+
+    public FileConfiguration getConfig() {
+        return ConfigAPI.getConfig(PATH_TO_CONFIG).get();
+    }
+
+    public void reloadConfig() {
+        ConfigAPI.getConfig(PATH_TO_CONFIG).reload();
+    }
+
+    public void saveConfig() {
+        ConfigAPI.getConfig(PATH_TO_CONFIG).save();
+    }
+
+    //<-- REGISTRATION -->
+
+    private void registerJob(File file) {
+        try {
+            FileConfiguration configuration = YamlConfiguration.loadConfiguration(file);
+            Job job = new Job(configuration, this);
+            jobs.put(job.getJobId().getId(), job);
+            StringUtil.log("The job " + job.getName() + " has been successfully loaded.");
+        } catch (Exception exception) {
+            StringUtil.log("&cAn error occurred while trying to load the job for the file " + file.getName());
+            StringUtil.log("&cError message: " + exception.getMessage());
+        }
+    }
+
+    private void registerListener() {
+        PluginManager pm = plugin.getServer().getPluginManager();
+        pm.registerEvents(new SystemEvents(this), plugin);
+        pm.registerEvents(new PlayerEvents(this), plugin);
+    }
+}

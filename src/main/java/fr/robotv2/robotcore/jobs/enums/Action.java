@@ -6,5 +6,6 @@ public enum Action {
     KILL_ENTITIES,
     KILL_PLAYERS,
     HARVEST_PLANT,
-    HARVEST_BREAK;
+    HARVEST_BREAK,
+    FISHING;
 }

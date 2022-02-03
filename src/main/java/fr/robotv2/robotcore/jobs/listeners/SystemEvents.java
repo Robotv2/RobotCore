@@ -1,6 +1,6 @@
 package fr.robotv2.robotcore.jobs.listeners;
 
-import fr.robotv2.robotcore.jobs.JobManager;
+import fr.robotv2.robotcore.jobs.JobModuleManager;
 import fr.robotv2.robotcore.jobs.events.EntityKillByPlayerEvent;
 import fr.robotv2.robotcore.jobs.events.HarvestBreakEvent;
 import fr.robotv2.robotcore.jobs.events.HarvestPlaceEvent;
@@ -17,10 +17,11 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-public record SystemEvents(JobManager jobManager) implements Listener {
+public record SystemEvents(JobModuleManager jobModuleManager) implements Listener {
 
     /**
      * Handle event related to planting seeds.
@@ -48,7 +49,7 @@ public record SystemEvents(JobManager jobManager) implements Listener {
         ItemStack seed = MatUtil.isSeed(itemInMainHand.getType()) ? itemInMainHand : itemInSecondHand;
         HarvestPlaceEvent harvestPlaceEvent = new HarvestPlaceEvent(player, block, seed);
 
-        jobManager.getCaller()
+        jobModuleManager.getCaller()
                 .call(fr.robotv2.robotcore.jobs.enums.Action.HARVEST_PLANT, harvestPlaceEvent);
 
         if(harvestPlaceEvent.isCancelled())
@@ -66,7 +67,7 @@ public record SystemEvents(JobManager jobManager) implements Listener {
 
         if(MatUtil.isFullyGrown(block)) {
             HarvestBreakEvent harvestBreakEvent = new HarvestBreakEvent(player, block);
-            jobManager.getCaller().call(fr.robotv2.robotcore.jobs.enums.Action.HARVEST_BREAK, harvestBreakEvent);
+            jobModuleManager.getCaller().call(fr.robotv2.robotcore.jobs.enums.Action.HARVEST_BREAK, harvestBreakEvent);
 
             if(harvestBreakEvent.isCancelled()) {
                 event.setCancelled(true);
@@ -79,7 +80,7 @@ public record SystemEvents(JobManager jobManager) implements Listener {
      */
     @EventHandler
     public void onBreakOfBlocks(BlockBreakEvent event) {
-        jobManager.getCaller().call(fr.robotv2.robotcore.jobs.enums.Action.BREAK, event);
+        jobModuleManager.getCaller().call(fr.robotv2.robotcore.jobs.enums.Action.BREAK, event);
     }
 
     /**
@@ -87,7 +88,7 @@ public record SystemEvents(JobManager jobManager) implements Listener {
      */
     @EventHandler
     public void onPlaceOfBlocks(BlockPlaceEvent event) {
-        jobManager.getCaller().call(fr.robotv2.robotcore.jobs.enums.Action.PLACE, event);
+        jobModuleManager.getCaller().call(fr.robotv2.robotcore.jobs.enums.Action.PLACE, event);
     }
 
     /**
@@ -104,13 +105,22 @@ public record SystemEvents(JobManager jobManager) implements Listener {
         if(event.getFinalDamage() >= livingEntity.getHealth()) {
             if(livingEntity instanceof Player target) {
                 PlayerKillByPlayerEvent playerKillByPlayerEvent = new PlayerKillByPlayerEvent(target, player);
-                jobManager.getCaller().call(fr.robotv2.robotcore.jobs.enums.Action.KILL_PLAYERS, playerKillByPlayerEvent);
+                jobModuleManager.getCaller().call(fr.robotv2.robotcore.jobs.enums.Action.KILL_PLAYERS, playerKillByPlayerEvent);
                 if(playerKillByPlayerEvent.isCancelled()) event.setCancelled(true);
             } else {
                 EntityKillByPlayerEvent entityKillByPlayerEvent = new EntityKillByPlayerEvent(player, livingEntity);
-                jobManager.getCaller().call(fr.robotv2.robotcore.jobs.enums.Action.KILL_ENTITIES, entityKillByPlayerEvent);
+                jobModuleManager.getCaller().call(fr.robotv2.robotcore.jobs.enums.Action.KILL_ENTITIES, entityKillByPlayerEvent);
                 if(entityKillByPlayerEvent.isCancelled()) event.setCancelled(true);
             }
         }
+    }
+
+    /**
+     * Handle event related to fishing.
+     */
+    @EventHandler
+    public void onFish(PlayerFishEvent event) {
+        if(event.getState() != PlayerFishEvent.State.CAUGHT_FISH) return;
+        jobModuleManager.getCaller().call(fr.robotv2.robotcore.jobs.enums.Action.FISHING, event);
     }
 }

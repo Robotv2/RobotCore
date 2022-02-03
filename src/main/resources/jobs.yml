@@ -1,8 +1,0 @@
-MINER:
-  BREAK:
-    DIAMOND_ORE:
-      exp: 10.0
-      money: 10.0
-    GOLD_ORE:
-      exp: 5.0
-      money: 5.0

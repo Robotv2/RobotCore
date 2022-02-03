@@ -1,18 +1,20 @@
 package fr.robotv2.robotcore;
 
-import fr.robotv2.robotcore.jobs.JobManager;
 import fr.robotv2.robotcore.api.StringUtil;
 import fr.robotv2.robotcore.api.VaultAPI;
+import fr.robotv2.robotcore.api.config.ConfigAPI;
+import fr.robotv2.robotcore.jobs.JobModuleManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class RobotCore extends JavaPlugin {
 
     private static RobotCore instance;
-    private JobManager jobManager;
+    private JobModuleManager jobModuleManager;
 
     @Override
     public void onEnable() {
         instance = this;
+        ConfigAPI.init(this);
         registerJobSystem();
         registerVault();
     }
@@ -29,11 +31,11 @@ public final class RobotCore extends JavaPlugin {
     //<-- JOB MODULE -->
 
     public void registerJobSystem() {
-        this.jobManager = new JobManager(this);
+        this.jobModuleManager = new JobModuleManager(this);
     }
 
-    public JobManager getJobManager() {
-        return jobManager;
+    public JobModuleManager getJobModule() {
+        return jobModuleManager;
     }
 
     //<-- VAULT -->

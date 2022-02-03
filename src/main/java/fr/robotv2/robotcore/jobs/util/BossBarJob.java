@@ -1,10 +1,9 @@
 package fr.robotv2.robotcore.jobs.util;
 
-import fr.robotv2.robotcore.jobs.JobManager;
-import fr.robotv2.robotcore.jobs.enums.JobType;
-import fr.robotv2.robotcore.jobs.impl.IJob;
 import fr.robotv2.robotcore.api.BossBarUtil;
 import fr.robotv2.robotcore.api.StringUtil;
+import fr.robotv2.robotcore.jobs.JobModuleManager;
+import fr.robotv2.robotcore.jobs.impl.Job;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -19,20 +18,19 @@ public class BossBarJob {
 
     private final Map<UUID, BukkitTask> tasks = new HashMap<>();
 
-    private final JobManager jobManager;
-    public BossBarJob(JobManager jobManager) {
-        this.jobManager = jobManager;
+    private final JobModuleManager jobModuleManager;
+    public BossBarJob(JobModuleManager jobModuleManager) {
+        this.jobModuleManager = jobModuleManager;
     }
 
-    public void sendBossBar(Player player, JobType type) {
-        double currentExp = jobManager.getLevelManager().getExp(player, type);
-        double neededExp = jobManager.getLevelManager().getExpNeeded(player, type);
+    public void sendBossBar(Player player, Job job) {
+        double currentExp = jobModuleManager.getLevelManager().getExp(player, job);
+        double neededExp = jobModuleManager.getLevelManager().getExpNeeded(player, job);
 
-        IJob job = jobManager.getJob(type);
         BossBar bar = BossBarUtil.createOrGetBar(player);
 
         bar.setColor(BossBarUtil.toBarColor(job.getChatColor()));
-        bar.setTitle(job.getChatColor() + job.getType().getTranslatedName() + StringUtil.colorize(" &8| &7" + currentExp + "&8/&7" + neededExp));
+        bar.setTitle(job.getChatColor() + job.getName() + StringUtil.colorize(" &8| &7" + currentExp + "&8/&7" + neededExp));
         bar.setProgress(neededExp / currentExp);
         bar.setVisible(true);
         if(!bar.getPlayers().contains(player))
@@ -49,7 +47,7 @@ public class BossBarJob {
                 BossBarUtil.clearPlayer(player);
                 bar.removePlayer(player);
             }
-        }.runTaskLater(jobManager.getPlugin(), 20L * 5);
+        }.runTaskLater(jobModuleManager.getPlugin(), 20L * 5);
         tasks.put(player.getUniqueId(), runnable);
     }
 }
