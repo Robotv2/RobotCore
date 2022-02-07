@@ -24,10 +24,6 @@ public abstract class AbstractCommand implements CommandExecutor, TabCompleter {
         if (command != null) {
             command.setExecutor(this);
             command.setTabCompleter(this);
-            this.subsName = getSubs().stream().map(AbstractSub::getName).collect(Collectors.toSet());
-            for(AbstractSub sub : getSubs()) {
-                subs.put(sub.getName().toLowerCase(), sub);
-            }
         } else
             throw new CommandException(StringUtil.colorize("Vous n'avez pas enregistrer la commande " +  name + " dans le plugin.yml."));
     }
@@ -46,6 +42,13 @@ public abstract class AbstractCommand implements CommandExecutor, TabCompleter {
     }
 
     public abstract Set<AbstractSub> getSubs();
+    public void afterLoadSubs() {
+        this.subsName = getSubs().stream().map(AbstractSub::getName).collect(Collectors.toSet());
+        for(AbstractSub sub : getSubs()) {
+            subs.put(sub.getName().toLowerCase(), sub);
+        }
+    }
+
     public abstract boolean enableTabCompleter();
 
     private boolean hasPermission(CommandSender sender) {

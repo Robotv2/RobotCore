@@ -18,6 +18,8 @@ public class RobotJobsCommand extends AbstractCommand {
         AbstractSub joinSub = new JoinSub();
         AbstractSub quitSub = new QuitSub();
         subs.addAll(Set.of(joinSub, quitSub));
+
+        this.afterLoadSubs();
     }
 
     @Override

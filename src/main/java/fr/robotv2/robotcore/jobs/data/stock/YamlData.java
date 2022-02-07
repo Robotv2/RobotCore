@@ -1,5 +1,6 @@
 package fr.robotv2.robotcore.jobs.data.stock;
 
+import fr.robotv2.robotcore.api.config.Config;
 import fr.robotv2.robotcore.jobs.JobModuleManager;
 import fr.robotv2.robotcore.jobs.data.JobData;
 import fr.robotv2.robotcore.jobs.impl.job.Job;
@@ -14,7 +15,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 public record YamlData(JobModuleManager jobModuleManager,
-                       Configuration configuration) implements JobData {
+                       Config config) implements JobData {
 
     @Override
     public void load() {
@@ -30,17 +31,17 @@ public record YamlData(JobModuleManager jobModuleManager,
 
     @Override
     public int getLevel(UUID playerUUID, JobId id) {
-        return configuration.getInt("players." + playerUUID + "." + id + ".level");
+        return config.get().getInt("players." + playerUUID + "." + id + ".level");
     }
 
     @Override
     public double getExp(UUID playerUUID, JobId id) {
-        return configuration.getDouble("players." + playerUUID + "." + id + ".exp");
+        return config.get().getDouble("players." + playerUUID + "." + id + ".exp");
     }
 
     @Override
     public Set<Job> getJobs(UUID playerUUID) {
-        ConfigurationSection section = configuration.getConfigurationSection("players." + playerUUID);
+        ConfigurationSection section = config.get().getConfigurationSection("players." + playerUUID);
         if (section == null) return new HashSet<>();
 
         //Collect all the jobs idea to create a hash set of ids.
@@ -54,22 +55,25 @@ public record YamlData(JobModuleManager jobModuleManager,
 
     @Override
     public void setLevel(UUID playerUUID, JobId id, int value) {
-        configuration.set("players." + playerUUID + "." + id + ".level", value);
+        config.get().set("players." + playerUUID + "." + id + ".level", value);
+        save();
     }
 
     @Override
     public void setExp(UUID playerUUID, JobId id, double value) {
-        configuration.set("players." + playerUUID + "." + id + ".exp", value);
+        config.get().set("players." + playerUUID + "." + id + ".exp", value);
+        save();
     }
 
     @Override
     public void setEnabled(UUID playerUUID, JobId jobId, boolean value) {
-        configuration.set("players." + playerUUID + "." + jobId.getId() + ".enabled", value);
+        config.get().set("players." + playerUUID + "." + jobId.getId() + ".enabled", value);
+        save();
     }
 
     @Override
     public void setJobs(UUID playerUUID, Set<Job> jobs) {
-        ConfigurationSection section = configuration.getConfigurationSection("players." + playerUUID);
+        ConfigurationSection section = config.get().getConfigurationSection("players." + playerUUID);
         if (section == null) {
             jobs.forEach(job -> {
                 this.setLevel(playerUUID, job.getJobId(), 0);
@@ -80,15 +84,20 @@ public record YamlData(JobModuleManager jobModuleManager,
             section.getKeys(false).forEach(jobId -> {
                 Job job = jobModuleManager.getJob(jobId);
                 if (job == null)
-                    configuration.set("players." + playerUUID + "." + jobId+ ".enabled", false);
+                    config.get().set("players." + playerUUID + "." + jobId+ ".enabled", false);
                 else
                     this.setEnabled(playerUUID, job.getJobId(), jobs.contains(job));
             });
         }
+        save();
     }
 
     @Override
     public boolean needAsync() {
         return false;
+    }
+
+    public void save() {
+        config.save();
     }
 }

@@ -1,5 +1,6 @@
 package fr.robotv2.robotcore.jobs.manager;
 
+import fr.robotv2.robotcore.api.StringUtil;
 import fr.robotv2.robotcore.api.TaskUtil;
 import fr.robotv2.robotcore.jobs.JobModuleManager;
 import fr.robotv2.robotcore.jobs.data.JobData;
@@ -41,7 +42,11 @@ public class PlayerManager {
 
     public void joinJob(Player player, Job job) {
         if(hasJob(player, job)) return;
+
         getJobs(player).add(job);
+        jobModuleManager.getLevelManager().setLevel(player, job, 0);
+        jobModuleManager.getLevelManager().setExp(player, job, 0D);
+        StringUtil.sendMessage(player, "&fVous venez de rejoindre le métier de " + job.getName(), true);
     }
 
     public void quitJob(Player player, Job job) {
@@ -71,6 +76,6 @@ public class PlayerManager {
                 }
                 savePlayer(player);
             }
-        }.runTaskTimer(jobModuleManager.getPlugin(), 20 * 5, 20 * 5);
+        }.runTaskTimer(jobModuleManager.getPlugin(), 20 * 60 * 5, 20 * 60 * 5);
     }
 }

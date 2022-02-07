@@ -27,7 +27,7 @@ public class DataHandler {
         StringUtil.log("&fData type for the job module: &e" + dataType.toString());
         switch (dataType) {
             case YAML -> {
-                data = new YamlData(jobModuleManager, ConfigAPI.getConfig("job-module" + File.separator + "data").get());
+                data = new YamlData(jobModuleManager, ConfigAPI.getConfig("job-module" + File.separator + "data"));
             }
         }
     }

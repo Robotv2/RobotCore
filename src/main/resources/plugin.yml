@@ -2,6 +2,8 @@ name: RobotCore
 version: '${project.version}'
 main: fr.robotv2.robotcore.RobotCore
 api-version: 1.18
+depend:
+  - Vault
 commands:
   jobs:
     usage: /<command>
