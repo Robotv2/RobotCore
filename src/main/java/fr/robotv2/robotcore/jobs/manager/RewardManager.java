@@ -1,6 +1,6 @@
 package fr.robotv2.robotcore.jobs.manager;
 
-import fr.robotv2.robotcore.jobs.enums.Action;
+import fr.robotv2.robotcore.jobs.enums.JobAction;
 import org.bukkit.configuration.file.FileConfiguration;
 
 public class RewardManager {
@@ -10,11 +10,11 @@ public class RewardManager {
       this.config = configuration;
     }
 
-    public double getRewardExpFromConfig(Action action, String value) {
-        return config.getDouble("actions." + action.toString() + "." + value + ".exp");
+    public double getRewardExpFromConfig(JobAction jobAction, String value) {
+        return config.getDouble("actions." + jobAction.toString() + "." + value + ".exp");
     }
 
-    public double getRewardMoneyFromConfig(Action action, String value) {
-        return config.getDouble("actions." + action.toString() + "." + value + ".money");
+    public double getRewardMoneyFromConfig(JobAction jobAction, String value) {
+        return config.getDouble("actions." + jobAction.toString() + "." + value + ".money");
     }
 }

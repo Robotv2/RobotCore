@@ -1,14 +1,16 @@
 package fr.robotv2.robotcore.jobs;
 
 import fr.robotv2.robotcore.RobotCore;
+import fr.robotv2.robotcore.api.MessageAPI;
 import fr.robotv2.robotcore.api.StringUtil;
-import fr.robotv2.robotcore.api.config.Config;
 import fr.robotv2.robotcore.api.config.ConfigAPI;
+import fr.robotv2.robotcore.jobs.command.RobotJobsCommand;
 import fr.robotv2.robotcore.jobs.data.DataHandler;
 import fr.robotv2.robotcore.jobs.events.EventCaller;
-import fr.robotv2.robotcore.jobs.impl.Job;
+import fr.robotv2.robotcore.jobs.impl.job.Job;
 import fr.robotv2.robotcore.jobs.listeners.PlayerEvents;
 import fr.robotv2.robotcore.jobs.listeners.SystemEvents;
+import fr.robotv2.robotcore.jobs.manager.BlockManager;
 import fr.robotv2.robotcore.jobs.manager.LevelManager;
 import fr.robotv2.robotcore.jobs.manager.PlayerManager;
 import fr.robotv2.robotcore.jobs.util.BossBarJob;
@@ -17,17 +19,17 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.PluginManager;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class JobModuleManager {
 
     private final RobotCore plugin;
     private final EventCaller caller;
     private final BossBarJob bossBarJob;
+    private final MessageAPI jobMessage;
 
+    private final BlockManager blockManager;
     private final LevelManager levelManager;
     private final PlayerManager playerManager;
     private final DataHandler dataHandler;
@@ -42,19 +44,27 @@ public class JobModuleManager {
         this.dataHandler.initializeStorage(this, this.getConfig());
         this.levelManager = new LevelManager(this);
         this.playerManager = new PlayerManager(this);
+        this.blockManager = new BlockManager(this);
         this.caller = new EventCaller(this);
         this.bossBarJob = new BossBarJob(this);
 
+        this.jobMessage = new MessageAPI(ConfigAPI.getConfig("job-module" + File.separator + "messages"));
+        this.jobMessage.setPrefix(getJobMessage().getPath("job-prefix"));
+
         loadJobsFromDataFolder();
         registerListener();
+        registerCommand();
     }
 
     private void loadJobsFromDataFolder() {
         jobs.clear();
         File dataFolder = new File(plugin.getDataFolder() + File.separator + "job-module" + File.separator + "jobs");
+        this.registerDefaultJobs(dataFolder);
         File[] files = dataFolder.listFiles();
         if(files != null) {
-            Arrays.stream(files).filter(File::isFile).forEach(this::registerJob);
+            Arrays.stream(files)
+                    .filter(File::isFile)
+                    .forEach(this::registerJob);
         }
     }
 
@@ -62,12 +72,22 @@ public class JobModuleManager {
 
         //<-- JOBS ->>
 
+    public boolean exist(String id) {
+        return getJob(id) != null || getJobsId().contains(id);
+    }
+
     public Job getJob(String id) {
         return jobs.get(id);
     }
 
     public Collection<Job> getJobs() {
         return jobs.values();
+    }
+
+    public List<String> getJobsId() {
+        return getJobs().stream()
+                .map(job -> job.getJobId().getId())
+                .collect(Collectors.toList());
     }
 
         //<-- CLASSES ->>
@@ -92,6 +112,13 @@ public class JobModuleManager {
         return playerManager;
     }
 
+    public BlockManager getBlockManager() {
+        return blockManager;
+    }
+
+    public MessageAPI getJobMessage() {
+        return jobMessage;
+    }
 
         //<-- PLUGIN -->
 
@@ -120,10 +147,18 @@ public class JobModuleManager {
             FileConfiguration configuration = YamlConfiguration.loadConfiguration(file);
             Job job = new Job(configuration, this);
             jobs.put(job.getJobId().getId(), job);
-            StringUtil.log("The job " + job.getName() + " has been successfully loaded.");
+            StringUtil.log("&7The job " + job.getName() + " &7has been successfully loaded.");
         } catch (Exception exception) {
-            StringUtil.log("&cAn error occurred while trying to load the job for the file " + file.getName());
+            StringUtil.log("&cAn error occurred while trying to load the job for the file: " + file.getName());
             StringUtil.log("&cError message: " + exception.getMessage());
+        }
+    }
+
+    private void registerDefaultJobs(File directory) {
+        if(!directory.exists()) {
+            directory.mkdir();
+            ConfigAPI.getConfig(directory + File.separator + "miner").setup();
+            ConfigAPI.getConfig(directory + File.separator + "lumberjack").setup();
         }
     }
 
@@ -131,5 +166,9 @@ public class JobModuleManager {
         PluginManager pm = plugin.getServer().getPluginManager();
         pm.registerEvents(new SystemEvents(this), plugin);
         pm.registerEvents(new PlayerEvents(this), plugin);
+    }
+
+    private void registerCommand() {
+        new RobotJobsCommand(getPlugin(), "jobs");
     }
 }

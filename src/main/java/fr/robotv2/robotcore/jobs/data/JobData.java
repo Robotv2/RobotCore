@@ -1,7 +1,7 @@
 package fr.robotv2.robotcore.jobs.data;
 
-import fr.robotv2.robotcore.jobs.impl.Job;
-import fr.robotv2.robotcore.jobs.impl.JobId;
+import fr.robotv2.robotcore.jobs.impl.job.Job;
+import fr.robotv2.robotcore.jobs.impl.job.JobId;
 
 import java.util.Set;
 import java.util.UUID;
@@ -18,5 +18,9 @@ public interface JobData {
 
     void setLevel(UUID playerUUID, JobId id, int value);
     void setExp(UUID playerUUID, JobId id, double value);
-    void setJobs(UUID playerUUID, JobId id, Set<Job> jobs);
+
+    void setEnabled(UUID playerUUID, JobId id, boolean value);
+    void setJobs(UUID playerUUID, Set<Job> jobs);
+
+    boolean needAsync();
 }

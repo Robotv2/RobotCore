@@ -1,6 +1,6 @@
-id: miner
-display: "&c&lMiner"
-color: red
+id: lumberjack
+display: "&e&lLumberjack"
+color: yellow
 actions:
   BREAK:
     diamond_ore:
@@ -15,4 +15,11 @@ actions:
     stone:
       money: 0.01
       exp: 0.01
+  KILL:
+    player:
+      money: 50
+      exp: 20
+    cow:
+      money: 10
+      exp: 10
 

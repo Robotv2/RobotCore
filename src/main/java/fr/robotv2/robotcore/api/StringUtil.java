@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender;
 
 public class StringUtil {
 
-    private static String PREFIX = "&c&lROBOTCORE &8&l»";
+    private static String PREFIX = "&c&lROBOTCORE &8&";
 
     public static String colorize(String message) {
         return ChatColor.translateAlternateColorCodes('&', message);

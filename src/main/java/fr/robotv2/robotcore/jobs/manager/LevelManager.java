@@ -3,8 +3,8 @@ package fr.robotv2.robotcore.jobs.manager;
 import fr.robotv2.robotcore.api.StringUtil;
 import fr.robotv2.robotcore.jobs.JobModuleManager;
 import fr.robotv2.robotcore.jobs.data.JobData;
-import fr.robotv2.robotcore.jobs.impl.Job;
-import fr.robotv2.robotcore.jobs.impl.JobId;
+import fr.robotv2.robotcore.jobs.impl.job.Job;
+import fr.robotv2.robotcore.jobs.impl.job.JobId;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;

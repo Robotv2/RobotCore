@@ -2,3 +2,9 @@ name: RobotCore
 version: '${project.version}'
 main: fr.robotv2.robotcore.RobotCore
 api-version: 1.18
+commands:
+  jobs:
+    usage: /<command>
+    description: The main command for the job module.
+    aliases:
+      - job

@@ -8,27 +8,17 @@ import org.bukkit.block.data.BlockData;
 public class MatUtil {
 
     public static boolean isCrops(Material material) {
-        switch (material) {
-            case WHEAT:
-            case CARROT:
-            case BEETROOT:
-            case MELON_STEM:
-            case PUMPKIN:
-                return true;
-        }
-        return false;
+        return switch (material) {
+            case WHEAT, CARROT, BEETROOT, MELON_STEM, PUMPKIN -> true;
+            default -> false;
+        };
     }
 
     public static boolean isSeed(Material material) {
-        switch (material) {
-            case BEETROOT_SEEDS:
-            case MELON_SEEDS:
-            case PUMPKIN_SEEDS:
-            case WHEAT_SEEDS:
-            case CARROT:
-                return true;
-        }
-        return false;
+        return switch (material) {
+            case BEETROOT_SEEDS, MELON_SEEDS, PUMPKIN_SEEDS, WHEAT_SEEDS, CARROT -> true;
+            default -> false;
+        };
     }
 
     public static boolean isFullyGrown(Block block) {

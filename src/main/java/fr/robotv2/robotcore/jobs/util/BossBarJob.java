@@ -3,7 +3,7 @@ package fr.robotv2.robotcore.jobs.util;
 import fr.robotv2.robotcore.api.BossBarUtil;
 import fr.robotv2.robotcore.api.StringUtil;
 import fr.robotv2.robotcore.jobs.JobModuleManager;
-import fr.robotv2.robotcore.jobs.impl.Job;
+import fr.robotv2.robotcore.jobs.impl.job.Job;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;

@@ -1,6 +1,7 @@
 package fr.robotv2.robotcore.jobs.listeners;
 
 import fr.robotv2.robotcore.jobs.JobModuleManager;
+import fr.robotv2.robotcore.jobs.enums.JobAction;
 import fr.robotv2.robotcore.jobs.events.EntityKillByPlayerEvent;
 import fr.robotv2.robotcore.jobs.events.HarvestBreakEvent;
 import fr.robotv2.robotcore.jobs.events.HarvestPlaceEvent;
@@ -50,7 +51,7 @@ public record SystemEvents(JobModuleManager jobModuleManager) implements Listene
         HarvestPlaceEvent harvestPlaceEvent = new HarvestPlaceEvent(player, block, seed);
 
         jobModuleManager.getCaller()
-                .call(fr.robotv2.robotcore.jobs.enums.Action.HARVEST_PLANT, harvestPlaceEvent);
+                .call(JobAction.HARVEST_PLANT, harvestPlaceEvent);
 
         if(harvestPlaceEvent.isCancelled())
             event.setCancelled(true);
@@ -67,7 +68,7 @@ public record SystemEvents(JobModuleManager jobModuleManager) implements Listene
 
         if(MatUtil.isFullyGrown(block)) {
             HarvestBreakEvent harvestBreakEvent = new HarvestBreakEvent(player, block);
-            jobModuleManager.getCaller().call(fr.robotv2.robotcore.jobs.enums.Action.HARVEST_BREAK, harvestBreakEvent);
+            jobModuleManager.getCaller().call(JobAction.HARVEST_BREAK, harvestBreakEvent);
 
             if(harvestBreakEvent.isCancelled()) {
                 event.setCancelled(true);
@@ -80,7 +81,9 @@ public record SystemEvents(JobModuleManager jobModuleManager) implements Listene
      */
     @EventHandler
     public void onBreakOfBlocks(BlockBreakEvent event) {
-        jobModuleManager.getCaller().call(fr.robotv2.robotcore.jobs.enums.Action.BREAK, event);
+        if(jobModuleManager.getBlockManager().hasBeenPlaced(event.getBlock()))
+            return;
+        jobModuleManager.getCaller().call(JobAction.BREAK, event);
     }
 
     /**
@@ -88,7 +91,7 @@ public record SystemEvents(JobModuleManager jobModuleManager) implements Listene
      */
     @EventHandler
     public void onPlaceOfBlocks(BlockPlaceEvent event) {
-        jobModuleManager.getCaller().call(fr.robotv2.robotcore.jobs.enums.Action.PLACE, event);
+        jobModuleManager.getCaller().call(JobAction.PLACE, event);
     }
 
     /**
@@ -105,11 +108,11 @@ public record SystemEvents(JobModuleManager jobModuleManager) implements Listene
         if(event.getFinalDamage() >= livingEntity.getHealth()) {
             if(livingEntity instanceof Player target) {
                 PlayerKillByPlayerEvent playerKillByPlayerEvent = new PlayerKillByPlayerEvent(target, player);
-                jobModuleManager.getCaller().call(fr.robotv2.robotcore.jobs.enums.Action.KILL_PLAYERS, playerKillByPlayerEvent);
+                jobModuleManager.getCaller().call(JobAction.KILL_PLAYERS, playerKillByPlayerEvent);
                 if(playerKillByPlayerEvent.isCancelled()) event.setCancelled(true);
             } else {
                 EntityKillByPlayerEvent entityKillByPlayerEvent = new EntityKillByPlayerEvent(player, livingEntity);
-                jobModuleManager.getCaller().call(fr.robotv2.robotcore.jobs.enums.Action.KILL_ENTITIES, entityKillByPlayerEvent);
+                jobModuleManager.getCaller().call(JobAction.KILL_ENTITIES, entityKillByPlayerEvent);
                 if(entityKillByPlayerEvent.isCancelled()) event.setCancelled(true);
             }
         }
@@ -121,6 +124,6 @@ public record SystemEvents(JobModuleManager jobModuleManager) implements Listene
     @EventHandler
     public void onFish(PlayerFishEvent event) {
         if(event.getState() != PlayerFishEvent.State.CAUGHT_FISH) return;
-        jobModuleManager.getCaller().call(fr.robotv2.robotcore.jobs.enums.Action.FISHING, event);
+        jobModuleManager.getCaller().call(JobAction.FISHING, event);
     }
 }

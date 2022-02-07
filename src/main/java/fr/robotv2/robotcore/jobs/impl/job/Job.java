@@ -1,8 +1,8 @@
-package fr.robotv2.robotcore.jobs.impl;
+package fr.robotv2.robotcore.jobs.impl.job;
 
 import fr.robotv2.robotcore.api.VaultAPI;
 import fr.robotv2.robotcore.jobs.JobModuleManager;
-import fr.robotv2.robotcore.jobs.enums.Action;
+import fr.robotv2.robotcore.jobs.enums.JobAction;
 import fr.robotv2.robotcore.jobs.manager.RewardManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -22,7 +22,7 @@ public class Job {
     private final JobModuleManager jobModuleManager;
     private final JobId id;
     private final String name;
-    private final Set<Action> actions;
+    private final Set<JobAction> actions;
     private final ChatColor chatColor;
     private final Configuration configuration;
     private final RewardManager rewardManager;
@@ -39,7 +39,7 @@ public class Job {
         ConfigurationSection section = configuration.getConfigurationSection("actions");
         if(section != null) {
             this.actions = section.getKeys(false).stream()
-                    .map(actionStr -> Action.valueOf(actionStr.toUpperCase())).collect(Collectors.toSet());
+                    .map(actionStr -> JobAction.valueOf(actionStr.toUpperCase())).collect(Collectors.toSet());
         } else {
             this.actions = new HashSet<>();
         }
@@ -53,7 +53,7 @@ public class Job {
         return name;
     }
 
-    public Set<Action> getActions() {
+    public Set<JobAction> getActions() {
         return actions;
     }
 
@@ -66,24 +66,24 @@ public class Job {
     }
 
     //<-- EVENT BLOCK -->
-    private void handleAction(Player player, String value, Action action) {
-        double moneyReward = rewardManager.getRewardMoneyFromConfig(action, value);
+    private void handleAction(Player player, String value, JobAction jobAction) {
+        double moneyReward = rewardManager.getRewardMoneyFromConfig(jobAction, value);
         if(moneyReward != 0D) {
             VaultAPI.giveMoney(player, moneyReward);
         }
 
-        double expReward = rewardManager.getRewardExpFromConfig(action, value);
+        double expReward = rewardManager.getRewardExpFromConfig(jobAction, value);
         if(expReward != 0D) {
             jobModuleManager.getLevelManager().giveExp(player, this, expReward);
             jobModuleManager.getBossBarJob().sendBossBar(player, this);
         }
     }
 
-    public void handleAction(Player player, Material material, Action action) {
-        handleAction(player, material.toString(), action);
+    public void handleAction(Player player, Material material, JobAction jobAction) {
+        handleAction(player, material.toString(), jobAction);
     }
 
-    public void handleAction(Player player, EntityType type, Action action) {
-        handleAction(player, type.toString(), action);
+    public void handleAction(Player player, EntityType type, JobAction jobAction) {
+        handleAction(player, type.toString(), jobAction);
     }
 }
