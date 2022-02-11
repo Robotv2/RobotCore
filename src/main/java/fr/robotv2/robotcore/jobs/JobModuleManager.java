@@ -13,6 +13,7 @@ import fr.robotv2.robotcore.jobs.listeners.SystemEvents;
 import fr.robotv2.robotcore.jobs.manager.BlockManager;
 import fr.robotv2.robotcore.jobs.manager.LevelManager;
 import fr.robotv2.robotcore.jobs.manager.PlayerManager;
+import fr.robotv2.robotcore.jobs.util.ActionBarJob;
 import fr.robotv2.robotcore.jobs.util.BossBarJob;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -26,7 +27,6 @@ public class JobModuleManager {
 
     private final RobotCore plugin;
     private final EventCaller caller;
-    private final BossBarJob bossBarJob;
     private final MessageAPI jobMessage;
 
     private final BlockManager blockManager;
@@ -35,6 +35,9 @@ public class JobModuleManager {
     private final DataHandler dataHandler;
 
     private final Map<String, Job> jobs = new HashMap<>();
+
+    private final BossBarJob bossBarJob;
+    private final ActionBarJob actionBarJob;
 
     private final String PATH_TO_CONFIG = "job-module" + File.separator + "config";
 
@@ -46,7 +49,9 @@ public class JobModuleManager {
         this.playerManager = new PlayerManager(this);
         this.blockManager = new BlockManager(this);
         this.caller = new EventCaller(this);
+
         this.bossBarJob = new BossBarJob(this);
+        this.actionBarJob = new ActionBarJob();
 
         this.jobMessage = new MessageAPI(ConfigAPI.getConfig("job-module" + File.separator + "messages"));
         this.jobMessage.setPrefix(getJobMessage().getPath("job-prefix"));
@@ -104,6 +109,10 @@ public class JobModuleManager {
         return bossBarJob;
     }
 
+    public ActionBarJob getActionBarJob() {
+        return actionBarJob;
+    }
+
     public LevelManager getLevelManager() {
         return levelManager;
     }
@@ -147,7 +156,7 @@ public class JobModuleManager {
             FileConfiguration configuration = YamlConfiguration.loadConfiguration(file);
             Job job = new Job(configuration, this);
             jobs.put(job.getJobId().getId(), job);
-            StringUtil.log("&7The job " + job.getName() + " &7has been successfully loaded.");
+            StringUtil.log("&7The job " + job.getName() + "&7 has been successfully loaded.");
         } catch (Exception exception) {
             StringUtil.log("&cAn error occurred while trying to load the job for the file: " + file.getName());
             StringUtil.log("&cError message: " + exception.getMessage());

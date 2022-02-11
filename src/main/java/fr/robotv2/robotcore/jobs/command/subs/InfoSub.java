@@ -1,5 +1,6 @@
 package fr.robotv2.robotcore.jobs.command.subs;
 
+import fr.robotv2.robotcore.api.StringUtil;
 import fr.robotv2.robotcore.api.impl.AbstractSub;
 import fr.robotv2.robotcore.jobs.impl.job.Job;
 import org.bukkit.command.CommandSender;
@@ -7,21 +8,20 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 
-public class QuitSub extends AbstractSub {
-
+public class InfoSub extends AbstractSub {
     @Override
     public String getUsage() {
-        return "&c&lUSAGE: &c/jobs quit <job>";
+        return "&c&lUSAGE: &c/jobs info <job>";
     }
 
     @Override
     public String getName() {
-        return "quit";
+        return "info";
     }
 
     @Override
     public String getPermission() {
-        return "robotcore.job.command.quit";
+        return "robotcore.job.command.info";
     }
 
     @Override
@@ -41,6 +41,8 @@ public class QuitSub extends AbstractSub {
         //Doesn't have the job.
         if(!getJobModuleManager().getPlayerManager().hasJob(player, job)) return;
 
-        getJobModuleManager().getPlayerManager().quitJob(player, job);
+        StringUtil.sendMessage(player, job.getName(), false);
+        StringUtil.sendMessage(player, "Level: " + this.getJobModuleManager().getLevelManager().getLevel(player, job), false);
+        StringUtil.sendMessage(player, "Exp:" + this.getJobModuleManager().getLevelManager().getExp(player, job), false);
     }
 }

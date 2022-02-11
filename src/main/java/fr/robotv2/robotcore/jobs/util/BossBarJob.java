@@ -10,6 +10,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -17,8 +18,9 @@ import java.util.UUID;
 public class BossBarJob {
 
     private final Map<UUID, BukkitTask> tasks = new HashMap<>();
-
     private final JobModuleManager jobModuleManager;
+    private final DecimalFormat format = new DecimalFormat("####.##");
+
     public BossBarJob(JobModuleManager jobModuleManager) {
         this.jobModuleManager = jobModuleManager;
     }
@@ -30,8 +32,8 @@ public class BossBarJob {
         BossBar bar = BossBarUtil.createOrGetBar(player);
 
         bar.setColor(BossBarUtil.toBarColor(job.getChatColor()));
-        bar.setTitle(job.getChatColor() + job.getName() + StringUtil.colorize(" &8| &7" + currentExp + "&8/&7" + neededExp));
-        bar.setProgress(neededExp / currentExp);
+        bar.setTitle(StringUtil.colorize(job.getName() + " &8| &7" + format.format(currentExp) + "&8/&7" + format.format(neededExp)));
+        bar.setProgress(currentExp / neededExp);
         bar.setVisible(true);
         if(!bar.getPlayers().contains(player))
             bar.addPlayer(player);

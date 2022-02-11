@@ -77,6 +77,10 @@ public class Job {
             jobModuleManager.getLevelManager().giveExp(player, this, expReward);
             jobModuleManager.getBossBarJob().sendBossBar(player, this);
         }
+
+        if(expReward != 0D && moneyReward != 0D) {
+            jobModuleManager.getActionBarJob().sendActionBar(player, this, moneyReward, expReward);
+        }
     }
 
     public void handleAction(Player player, Material material, JobAction jobAction) {

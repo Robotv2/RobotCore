@@ -77,7 +77,7 @@ public class LevelManager {
     }
 
     public boolean canLevelUp(Player player, Job job) {
-        return this.getExp(player, job) >= getExp(player, job);
+        return this.getExp(player, job) >= getExpNeeded(player, job);
     }
 
     public void levelUp(Player player, Job job) {
