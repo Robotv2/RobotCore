@@ -18,7 +18,6 @@ public interface JobData {
 
     void setLevel(UUID playerUUID, JobId id, int value);
     void setExp(UUID playerUUID, JobId id, double value);
-
     void setEnabled(UUID playerUUID, JobId id, boolean value);
     void setJobs(UUID playerUUID, Set<Job> jobs);
 

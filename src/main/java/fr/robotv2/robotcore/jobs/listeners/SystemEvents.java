@@ -1,6 +1,6 @@
 package fr.robotv2.robotcore.jobs.listeners;
 
-import fr.robotv2.robotcore.jobs.JobModuleManager;
+import fr.robotv2.robotcore.jobs.JobModule;
 import fr.robotv2.robotcore.jobs.enums.JobAction;
 import fr.robotv2.robotcore.jobs.events.EntityKillByPlayerEvent;
 import fr.robotv2.robotcore.jobs.events.HarvestBreakEvent;
@@ -22,7 +22,7 @@ import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-public record SystemEvents(JobModuleManager jobModuleManager) implements Listener {
+public record SystemEvents(JobModule jobModule) implements Listener {
 
     /**
      * Handle event related to planting seeds.
@@ -50,7 +50,7 @@ public record SystemEvents(JobModuleManager jobModuleManager) implements Listene
         ItemStack seed = MatUtil.isSeed(itemInMainHand.getType()) ? itemInMainHand : itemInSecondHand;
         HarvestPlaceEvent harvestPlaceEvent = new HarvestPlaceEvent(player, block, seed);
 
-        jobModuleManager.getCaller()
+        jobModule.getCaller()
                 .call(JobAction.HARVEST_PLANT, harvestPlaceEvent);
 
         if(harvestPlaceEvent.isCancelled())
@@ -62,13 +62,15 @@ public record SystemEvents(JobModuleManager jobModuleManager) implements Listene
      */
     @EventHandler
     public void onBreakOfCrops(BlockBreakEvent event) {
+        if(jobModule.getBlockManager().hasBeenPlaced(event.getBlock()))
+            return;
 
         Player player = event.getPlayer();
         Block block = event.getBlock();
 
         if(MatUtil.isFullyGrown(block)) {
             HarvestBreakEvent harvestBreakEvent = new HarvestBreakEvent(player, block);
-            jobModuleManager.getCaller().call(JobAction.HARVEST_BREAK, harvestBreakEvent);
+            jobModule.getCaller().call(JobAction.HARVEST_BREAK, harvestBreakEvent);
 
             if(harvestBreakEvent.isCancelled()) {
                 event.setCancelled(true);
@@ -81,9 +83,9 @@ public record SystemEvents(JobModuleManager jobModuleManager) implements Listene
      */
     @EventHandler
     public void onBreakOfBlocks(BlockBreakEvent event) {
-        if(jobModuleManager.getBlockManager().hasBeenPlaced(event.getBlock()))
+        if(jobModule.getBlockManager().hasBeenPlaced(event.getBlock()))
             return;
-        jobModuleManager.getCaller().call(JobAction.BREAK, event);
+        jobModule.getCaller().call(JobAction.BREAK, event);
     }
 
     /**
@@ -91,7 +93,7 @@ public record SystemEvents(JobModuleManager jobModuleManager) implements Listene
      */
     @EventHandler
     public void onPlaceOfBlocks(BlockPlaceEvent event) {
-        jobModuleManager.getCaller().call(JobAction.PLACE, event);
+        jobModule.getCaller().call(JobAction.PLACE, event);
     }
 
     /**
@@ -108,11 +110,11 @@ public record SystemEvents(JobModuleManager jobModuleManager) implements Listene
         if(event.getFinalDamage() >= livingEntity.getHealth()) {
             if(livingEntity instanceof Player target) {
                 PlayerKillByPlayerEvent playerKillByPlayerEvent = new PlayerKillByPlayerEvent(target, player);
-                jobModuleManager.getCaller().call(JobAction.KILL_PLAYERS, playerKillByPlayerEvent);
+                jobModule.getCaller().call(JobAction.KILL_PLAYERS, playerKillByPlayerEvent);
                 if(playerKillByPlayerEvent.isCancelled()) event.setCancelled(true);
             } else {
                 EntityKillByPlayerEvent entityKillByPlayerEvent = new EntityKillByPlayerEvent(player, livingEntity);
-                jobModuleManager.getCaller().call(JobAction.KILL_ENTITIES, entityKillByPlayerEvent);
+                jobModule.getCaller().call(JobAction.KILL_ENTITIES, entityKillByPlayerEvent);
                 if(entityKillByPlayerEvent.isCancelled()) event.setCancelled(true);
             }
         }
@@ -124,6 +126,6 @@ public record SystemEvents(JobModuleManager jobModuleManager) implements Listene
     @EventHandler
     public void onFish(PlayerFishEvent event) {
         if(event.getState() != PlayerFishEvent.State.CAUGHT_FISH) return;
-        jobModuleManager.getCaller().call(JobAction.FISHING, event);
+        jobModule.getCaller().call(JobAction.FISHING, event);
     }
 }

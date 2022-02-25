@@ -1,9 +1,9 @@
 package fr.robotv2.robotcore.jobs;
 
-import fr.robotv2.robotcore.RobotCore;
 import fr.robotv2.robotcore.api.MessageAPI;
 import fr.robotv2.robotcore.api.StringUtil;
 import fr.robotv2.robotcore.api.config.ConfigAPI;
+import fr.robotv2.robotcore.api.module.Module;
 import fr.robotv2.robotcore.jobs.command.RobotJobsCommand;
 import fr.robotv2.robotcore.jobs.data.DataHandler;
 import fr.robotv2.robotcore.jobs.events.EventCaller;
@@ -13,32 +13,36 @@ import fr.robotv2.robotcore.jobs.listeners.SystemEvents;
 import fr.robotv2.robotcore.jobs.manager.BlockManager;
 import fr.robotv2.robotcore.jobs.manager.LevelManager;
 import fr.robotv2.robotcore.jobs.manager.PlayerManager;
+import fr.robotv2.robotcore.jobs.util.ActionBarJob;
 import fr.robotv2.robotcore.jobs.util.BossBarJob;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class JobModuleManager {
+public class JobModule implements Module {
 
-    private final RobotCore plugin;
-    private final EventCaller caller;
-    private final BossBarJob bossBarJob;
-    private final MessageAPI jobMessage;
+    private JavaPlugin plugin;
+    private EventCaller caller;
+    private BossBarJob bossBarJob;
+    private ActionBarJob actionBarJob;
+    private MessageAPI jobMessage;
 
-    private final BlockManager blockManager;
-    private final LevelManager levelManager;
-    private final PlayerManager playerManager;
-    private final DataHandler dataHandler;
+    private BlockManager blockManager;
+    private LevelManager levelManager;
+    private PlayerManager playerManager;
+    private DataHandler dataHandler;
 
     private final Map<String, Job> jobs = new HashMap<>();
 
     private final String PATH_TO_CONFIG = "job-module" + File.separator + "config";
 
-    public JobModuleManager(RobotCore plugin) {
+    @Override
+    public void onEnable(JavaPlugin plugin) {
         this.plugin = plugin;
         this.dataHandler = new DataHandler();
         this.dataHandler.initializeStorage(this, this.getConfig());
@@ -47,6 +51,7 @@ public class JobModuleManager {
         this.blockManager = new BlockManager(this);
         this.caller = new EventCaller(this);
         this.bossBarJob = new BossBarJob(this);
+        this.actionBarJob = new ActionBarJob();
 
         this.jobMessage = new MessageAPI(ConfigAPI.getConfig("job-module" + File.separator + "messages"));
         this.jobMessage.setPrefix(getJobMessage().getPath("job-prefix"));
@@ -56,15 +61,16 @@ public class JobModuleManager {
         registerCommand();
     }
 
+    @Override
+    public void onDisable() {}
+
     private void loadJobsFromDataFolder() {
         jobs.clear();
         File dataFolder = new File(plugin.getDataFolder() + File.separator + "job-module" + File.separator + "jobs");
         this.registerDefaultJobs(dataFolder);
         File[] files = dataFolder.listFiles();
         if(files != null) {
-            Arrays.stream(files)
-                    .filter(File::isFile)
-                    .forEach(this::registerJob);
+            Arrays.stream(files).filter(File::isFile).forEach(this::registerJob);
         }
     }
 
@@ -85,8 +91,7 @@ public class JobModuleManager {
     }
 
     public List<String> getJobsId() {
-        return getJobs().stream()
-                .map(job -> job.getJobId().getId())
+        return getJobs().stream().map(job -> job.getJobId().getId())
                 .collect(Collectors.toList());
     }
 
@@ -102,6 +107,10 @@ public class JobModuleManager {
 
     public BossBarJob getBossBarJob() {
         return bossBarJob;
+    }
+
+    public ActionBarJob getActionBarJob() {
+        return actionBarJob;
     }
 
     public LevelManager getLevelManager() {
@@ -122,7 +131,7 @@ public class JobModuleManager {
 
         //<-- PLUGIN -->
 
-    public RobotCore getPlugin() {
+    public JavaPlugin getPlugin() {
         return plugin;
     }
 

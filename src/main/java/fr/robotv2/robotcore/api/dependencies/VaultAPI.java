@@ -1,6 +1,6 @@
-package fr.robotv2.robotcore.api;
+package fr.robotv2.robotcore.api.dependencies;
 
-import fr.robotv2.robotcore.RobotCore;
+import fr.robotv2.robotcore.core.RobotCore;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.RegisteredServiceProvider;

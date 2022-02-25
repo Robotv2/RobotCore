@@ -1,6 +1,6 @@
 package fr.robotv2.robotcore.api;
 
-import fr.robotv2.robotcore.RobotCore;
+import fr.robotv2.robotcore.core.RobotCore;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 

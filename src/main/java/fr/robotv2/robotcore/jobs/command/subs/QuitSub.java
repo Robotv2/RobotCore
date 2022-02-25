@@ -34,7 +34,7 @@ public class QuitSub extends AbstractSub {
     public void execute(Player player, String[] args) {
         if(!this.checkArguments(player, args, 2)) return;
 
-        String jobId = args[1].toLowerCase(Locale.ROOT);
+        String jobId = args[1].toLowerCase();
         Job job = getJobModuleManager().getJob(jobId);
 
         //job doesn't exist.

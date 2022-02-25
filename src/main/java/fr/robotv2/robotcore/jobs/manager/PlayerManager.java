@@ -2,7 +2,7 @@ package fr.robotv2.robotcore.jobs.manager;
 
 import fr.robotv2.robotcore.api.StringUtil;
 import fr.robotv2.robotcore.api.TaskUtil;
-import fr.robotv2.robotcore.jobs.JobModuleManager;
+import fr.robotv2.robotcore.jobs.JobModule;
 import fr.robotv2.robotcore.jobs.data.JobData;
 import fr.robotv2.robotcore.jobs.impl.job.Job;
 import org.bukkit.entity.Player;
@@ -15,19 +15,20 @@ import java.util.UUID;
 
 public class PlayerManager {
 
-    private final JobModuleManager jobModuleManager;
+    private final JobModule jobModule;
     private final Map<UUID, Set<Job>> jobCache = new HashMap<>();
-    public PlayerManager(JobModuleManager jobModuleManager) {
-        this.jobModuleManager = jobModuleManager;
+    public PlayerManager(JobModule jobModule) {
+        this.jobModule = jobModule;
     }
 
     public boolean initializePlayer(Player player) {
         try {
-            JobData data = jobModuleManager.getDataHandler().getData();
+            JobData data = jobModule.getDataHandler().getData();
             Set<Job> jobs = data.getJobs(player.getUniqueId());
             jobCache.put(player.getUniqueId(), jobs);
             return true;
         } catch (Exception exception) {
+            StringUtil.log("Error's message: " + exception.getMessage());
             return false;
         }
     }
@@ -42,10 +43,7 @@ public class PlayerManager {
 
     public void joinJob(Player player, Job job) {
         if(hasJob(player, job)) return;
-
         getJobs(player).add(job);
-        jobModuleManager.getLevelManager().setLevel(player, job, 0);
-        jobModuleManager.getLevelManager().setExp(player, job, 0D);
         StringUtil.sendMessage(player, "&fVous venez de rejoindre le métier de " + job.getName(), true);
     }
 
@@ -55,8 +53,8 @@ public class PlayerManager {
     }
 
     public void savePlayer(Player player) {
-        JobData jobData = jobModuleManager.getDataHandler().getData();
-        LevelManager levelManager = jobModuleManager.getLevelManager();
+        JobData jobData = jobModule.getDataHandler().getData();
+        LevelManager levelManager = jobModule.getLevelManager();
         TaskUtil.runTask(() -> {
             for(Job job : this.getJobs(player)) {
                 jobData.setLevel(player.getUniqueId(), job.getJobId(), levelManager.getLevel(player, job));
@@ -76,6 +74,6 @@ public class PlayerManager {
                 }
                 savePlayer(player);
             }
-        }.runTaskTimer(jobModuleManager.getPlugin(), 20 * 60 * 5, 20 * 60 * 5);
+        }.runTaskTimer(jobModule.getPlugin(), 20 * 60 * 5, 20 * 60 * 5);
     }
 }

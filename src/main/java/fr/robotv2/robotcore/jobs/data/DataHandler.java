@@ -2,7 +2,7 @@ package fr.robotv2.robotcore.jobs.data;
 
 import fr.robotv2.robotcore.api.StringUtil;
 import fr.robotv2.robotcore.api.config.ConfigAPI;
-import fr.robotv2.robotcore.jobs.JobModuleManager;
+import fr.robotv2.robotcore.jobs.JobModule;
 import fr.robotv2.robotcore.jobs.data.stock.YamlData;
 import fr.robotv2.robotcore.jobs.enums.DataType;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -14,7 +14,7 @@ public class DataHandler {
     private DataType dataType = DataType.YAML;
     private JobData data;
 
-    public void initializeStorage(JobModuleManager jobModuleManager, FileConfiguration configuration) {
+    public void initializeStorage(JobModule jobModule, FileConfiguration configuration) {
         String DATA_TYPE = configuration.getString("data-type");
         if(DATA_TYPE != null) {
             try {
@@ -27,7 +27,7 @@ public class DataHandler {
         StringUtil.log("&fData type for the job module: &e" + dataType.toString());
         switch (dataType) {
             case YAML -> {
-                data = new YamlData(jobModuleManager, ConfigAPI.getConfig("job-module" + File.separator + "data"));
+                data = new YamlData(jobModule, ConfigAPI.getConfig("job-module" + File.separator + "data"));
             }
         }
     }

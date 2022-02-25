@@ -1,7 +1,7 @@
 package fr.robotv2.robotcore.jobs.impl.job;
 
-import fr.robotv2.robotcore.api.VaultAPI;
-import fr.robotv2.robotcore.jobs.JobModuleManager;
+import fr.robotv2.robotcore.api.dependencies.VaultAPI;
+import fr.robotv2.robotcore.jobs.JobModule;
 import fr.robotv2.robotcore.jobs.enums.JobAction;
 import fr.robotv2.robotcore.jobs.manager.RewardManager;
 import org.bukkit.ChatColor;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 public class Job {
 
-    private final JobModuleManager jobModuleManager;
+    private final JobModule jobModule;
     private final JobId id;
     private final String name;
     private final Set<JobAction> actions;
@@ -27,9 +27,9 @@ public class Job {
     private final Configuration configuration;
     private final RewardManager rewardManager;
 
-    public Job(FileConfiguration configuration, JobModuleManager jobModuleManager) {
+    public Job(FileConfiguration configuration, JobModule jobModule) {
 
-        this.jobModuleManager = jobModuleManager;
+        this.jobModule = jobModule;
         this.id = new JobId(configuration.getString("id"));
         this.name = configuration.getString("display");
         this.chatColor = ChatColor.valueOf(Objects.requireNonNull(configuration.getString("color")).toUpperCase());
@@ -74,8 +74,12 @@ public class Job {
 
         double expReward = rewardManager.getRewardExpFromConfig(jobAction, value);
         if(expReward != 0D) {
-            jobModuleManager.getLevelManager().giveExp(player, this, expReward);
-            jobModuleManager.getBossBarJob().sendBossBar(player, this);
+            jobModule.getLevelManager().giveExp(player, this, expReward);
+            jobModule.getBossBarJob().sendBossBar(player, this);
+        }
+
+        if(expReward != 0D && moneyReward != 0D) {
+            jobModule.getActionBarJob().sendActionBar(player, this, moneyReward, expReward);
         }
     }
 

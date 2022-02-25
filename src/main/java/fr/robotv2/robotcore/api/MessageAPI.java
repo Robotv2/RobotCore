@@ -35,4 +35,8 @@ public class MessageAPI {
     public void sendMessage(CommandSender sender, String message) {
         sender.sendMessage(message);
     }
+
+    public void sendPath(CommandSender sender, String path) {
+        this.sendMessage(sender, getPath(path));
+    }
 }

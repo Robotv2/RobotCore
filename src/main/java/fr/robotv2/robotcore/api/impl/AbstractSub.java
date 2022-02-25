@@ -1,8 +1,8 @@
 package fr.robotv2.robotcore.api.impl;
 
-import fr.robotv2.robotcore.RobotCore;
 import fr.robotv2.robotcore.api.StringUtil;
-import fr.robotv2.robotcore.jobs.JobModuleManager;
+import fr.robotv2.robotcore.core.RobotCore;
+import fr.robotv2.robotcore.jobs.JobModule;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -25,7 +25,7 @@ public abstract class AbstractSub {
         return true;
     }
 
-    public JobModuleManager getJobModuleManager() {
-        return RobotCore.getInstance().getJobModule();
+    public JobModule getJobModuleManager() {
+        return RobotCore.getInstance().getModuleRegistry().getJobModule();
     }
 }

@@ -1,7 +1,7 @@
 package fr.robotv2.robotcore.jobs.manager;
 
 import fr.robotv2.robotcore.api.StringUtil;
-import fr.robotv2.robotcore.jobs.JobModuleManager;
+import fr.robotv2.robotcore.jobs.JobModule;
 import fr.robotv2.robotcore.jobs.data.JobData;
 import fr.robotv2.robotcore.jobs.impl.job.Job;
 import fr.robotv2.robotcore.jobs.impl.job.JobId;
@@ -13,17 +13,17 @@ import java.util.UUID;
 
 public class LevelManager {
 
-    private final JobModuleManager jobModuleManager;
+    private final JobModule jobModule;
     private final Map<UUID, Map<JobId, Integer>> levels = new HashMap<>();
     private final Map<UUID, Map<JobId, Double>> experiences = new HashMap<>();
 
-    public LevelManager(JobModuleManager jobModuleManager) {
-        this.jobModuleManager = jobModuleManager;
+    public LevelManager(JobModule jobModule) {
+        this.jobModule = jobModule;
     }
 
     public boolean initializePlayer(Player player) {
         try {
-            JobData data = jobModuleManager.getDataHandler().getData();
+            JobData data = jobModule.getDataHandler().getData();
 
             UUID playerUUID = player.getUniqueId();
             Map<JobId, Integer> levels = new HashMap<>();
@@ -36,8 +36,10 @@ public class LevelManager {
 
             this.levels.put(playerUUID, levels);
             this.experiences.put(playerUUID, experiences);
+
             return true;
         } catch (Exception exception) {
+            StringUtil.log("Error's message: " + exception.getMessage());
             return false;
         }
     }
@@ -77,19 +79,18 @@ public class LevelManager {
     }
 
     public boolean canLevelUp(Player player, Job job) {
-        return this.getExp(player, job) >= getExp(player, job);
+        return this.getExp(player, job) >= getExpNeeded(player, job);
     }
 
     public void levelUp(Player player, Job job) {
         if(!canLevelUp(player, job)) return;
 
-        setExp(player, job, 0D);
+        this.setExp(player, job, 0D);
+        this.setLevel(player, job, getLevel(player, job) + 1);
 
-        int nextLevel = getLevel(player, job) + 1;
-        setLevel(player, job, nextLevel);
-
-        StringUtil.sendMessage(player,
-                "&7You have just passed level &f" + nextLevel + " &7for the job " + job.getChatColor() + job.getName() + " &7!",
+        StringUtil.sendMessage(
+                player,
+                "&7You have just passed level &f" + getLevel(player, job) + " &7for the job " + job.getChatColor() + job.getName() + " &7!",
                 true);
     }
 }

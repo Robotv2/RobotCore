@@ -1,6 +1,6 @@
 package fr.robotv2.robotcore.jobs.manager;
 
-import fr.robotv2.robotcore.jobs.JobModuleManager;
+import fr.robotv2.robotcore.jobs.JobModule;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -9,11 +9,14 @@ import org.bukkit.metadata.FixedMetadataValue;
 
 public class BlockManager implements Listener {
 
+    private final JobModule jobModule;
     private final String METADATA_TEXT = "has-been-broken";
-    private final JobModuleManager jobModuleManager;
-    public BlockManager(JobModuleManager jobModuleManager) {
-        this.jobModuleManager = jobModuleManager;
-        jobModuleManager.getPlugin().getServer().getPluginManager().registerEvents(this, jobModuleManager.getPlugin());
+    private final FixedMetadataValue METADATA_FILLED;
+
+    public BlockManager(JobModule jobModule) {
+        this.jobModule = jobModule;
+        this.METADATA_FILLED = new FixedMetadataValue(jobModule.getPlugin(), true);
+        jobModule.getPlugin().getServer().getPluginManager().registerEvents(this, jobModule.getPlugin());
     }
 
     public boolean hasBeenPlaced(Block block) {
@@ -22,9 +25,9 @@ public class BlockManager implements Listener {
 
     public void setHasBeenPlaced(Block block, boolean value) {
         if(value) {
-            block.setMetadata(METADATA_TEXT, new FixedMetadataValue(jobModuleManager.getPlugin(), true));
+            block.setMetadata(METADATA_TEXT, METADATA_FILLED);
         } else {
-            block.setMetadata(METADATA_TEXT, new FixedMetadataValue(jobModuleManager.getPlugin(), null));
+            block.removeMetadata(METADATA_TEXT, jobModule.getPlugin());
         }
     }
 

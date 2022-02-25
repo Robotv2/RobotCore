@@ -1,6 +1,6 @@
 package fr.robotv2.robotcore.jobs.events;
 
-import fr.robotv2.robotcore.jobs.JobModuleManager;
+import fr.robotv2.robotcore.jobs.JobModule;
 import fr.robotv2.robotcore.jobs.enums.JobAction;
 import fr.robotv2.robotcore.jobs.impl.job.Job;
 import org.bukkit.entity.EntityType;
@@ -12,10 +12,10 @@ import org.bukkit.event.player.PlayerFishEvent;
 
 import java.util.Collection;
 
-public record EventCaller(JobModuleManager jobModuleManager) {
+public record EventCaller(JobModule jobModule) {
 
     public void call(JobAction jobAction, Event event) {
-        Collection<Job> jobs = jobModuleManager.getJobs();
+        Collection<Job> jobs = jobModule.getJobs();
         switch (jobAction) {
 
             case HARVEST_PLANT -> {

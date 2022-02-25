@@ -15,6 +15,7 @@ public class RobotJobsCommand extends AbstractCommand {
 
     public RobotJobsCommand(JavaPlugin plugin, String name) {
         super(plugin, name);
+
         AbstractSub joinSub = new JoinSub();
         AbstractSub quitSub = new QuitSub();
         subs.addAll(Set.of(joinSub, quitSub));

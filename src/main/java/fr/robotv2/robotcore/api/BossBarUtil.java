@@ -16,7 +16,7 @@ public class BossBarUtil {
     private static final Map<UUID, BossBar> bossBars = new HashMap<>();
 
     public static BossBar createOrGetBar(Player player) {
-        if(bossBars.get(player.getUniqueId()) == null) {
+        if(bossBars.containsKey(player.getUniqueId())) {
             BossBar bar = Bukkit.createBossBar("", BarColor.WHITE, BarStyle.SOLID);
             bossBars.put(player.getUniqueId(), bar);
             return bar;
@@ -32,7 +32,7 @@ public class BossBarUtil {
     public static BarColor toBarColor(ChatColor color) {
         try {
             return BarColor.valueOf(color.toString());
-        } catch(Exception e) {
+        } catch(IllegalArgumentException e) {
             return BarColor.WHITE;
         }
     }
