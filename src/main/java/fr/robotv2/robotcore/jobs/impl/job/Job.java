@@ -81,6 +81,10 @@ public class Job {
         if(expReward != 0D && moneyReward != 0D) {
             jobModule.getActionBarJob().sendActionBar(player, this, moneyReward, expReward);
         }
+
+        if(expReward != 0D && moneyReward != 0D) {
+            jobModuleManager.getActionBarJob().sendActionBar(player, this, moneyReward, expReward);
+        }
     }
 
     public void handleAction(Player player, Material material, JobAction jobAction) {

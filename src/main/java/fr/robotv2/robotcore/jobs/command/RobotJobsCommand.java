@@ -2,6 +2,7 @@ package fr.robotv2.robotcore.jobs.command;
 
 import fr.robotv2.robotcore.api.impl.AbstractCommand;
 import fr.robotv2.robotcore.api.impl.AbstractSub;
+import fr.robotv2.robotcore.jobs.command.subs.InfoSub;
 import fr.robotv2.robotcore.jobs.command.subs.JoinSub;
 import fr.robotv2.robotcore.jobs.command.subs.QuitSub;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -18,8 +19,8 @@ public class RobotJobsCommand extends AbstractCommand {
 
         AbstractSub joinSub = new JoinSub();
         AbstractSub quitSub = new QuitSub();
-        subs.addAll(Set.of(joinSub, quitSub));
-
+        AbstractSub infoSub = new InfoSub();
+        subs.addAll(Set.of(joinSub, quitSub, infoSub));
         this.afterLoadSubs();
     }
 
