@@ -16,7 +16,7 @@ public class BossBarUtil {
     private static final Map<UUID, BossBar> bossBars = new HashMap<>();
 
     public static BossBar createOrGetBar(Player player) {
-        if(bossBars.containsKey(player.getUniqueId())) {
+        if(!bossBars.containsKey(player.getUniqueId())) {
             BossBar bar = Bukkit.createBossBar("", BarColor.WHITE, BarStyle.SOLID);
             bossBars.put(player.getUniqueId(), bar);
             return bar;

@@ -4,7 +4,7 @@ import fr.robotv2.robotcore.api.StringUtil;
 import fr.robotv2.robotcore.api.config.ConfigAPI;
 import fr.robotv2.robotcore.jobs.JobModule;
 import fr.robotv2.robotcore.jobs.data.stock.YamlData;
-import fr.robotv2.robotcore.jobs.enums.DataType;
+import fr.robotv2.robotcore.api.DataType;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;

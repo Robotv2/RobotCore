@@ -15,11 +15,4 @@ actions:
     stone:
       money: 0.01
       exp: 0.01
-  KILL:
-    player:
-      money: 50
-      exp: 20
-    cow:
-      money: 10
-      exp: 10
 

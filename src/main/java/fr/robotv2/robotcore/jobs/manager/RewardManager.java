@@ -1,6 +1,6 @@
 package fr.robotv2.robotcore.jobs.manager;
 
-import fr.robotv2.robotcore.jobs.enums.JobAction;
+import fr.robotv2.robotcore.jobs.impl.job.JobAction;
 import org.bukkit.configuration.file.FileConfiguration;
 
 public class RewardManager {

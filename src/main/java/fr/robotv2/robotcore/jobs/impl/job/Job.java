@@ -2,7 +2,6 @@ package fr.robotv2.robotcore.jobs.impl.job;
 
 import fr.robotv2.robotcore.api.dependencies.VaultAPI;
 import fr.robotv2.robotcore.jobs.JobModule;
-import fr.robotv2.robotcore.jobs.enums.JobAction;
 import fr.robotv2.robotcore.jobs.manager.RewardManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -81,17 +80,13 @@ public class Job {
         if(expReward != 0D && moneyReward != 0D) {
             jobModule.getActionBarJob().sendActionBar(player, this, moneyReward, expReward);
         }
-
-        if(expReward != 0D && moneyReward != 0D) {
-            jobModuleManager.getActionBarJob().sendActionBar(player, this, moneyReward, expReward);
-        }
     }
 
     public void handleAction(Player player, Material material, JobAction jobAction) {
-        handleAction(player, material.toString(), jobAction);
+        handleAction(player, material.toString().toUpperCase(), jobAction);
     }
 
     public void handleAction(Player player, EntityType type, JobAction jobAction) {
-        handleAction(player, type.toString(), jobAction);
+        handleAction(player, type.toString().toUpperCase(), jobAction);
     }
 }

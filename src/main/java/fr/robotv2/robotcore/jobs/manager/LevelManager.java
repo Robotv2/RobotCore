@@ -47,6 +47,8 @@ public class LevelManager {
     public int getLevel(Player player, Job type) {
         if(levels.get(player.getUniqueId()) == null)
             return 0;
+        if(!levels.get(player.getUniqueId()).containsKey(type.getJobId()))
+            return 0;
         return levels.get(player.getUniqueId()).get(type.getJobId());
     }
 
@@ -58,6 +60,8 @@ public class LevelManager {
 
     public Double getExp(Player player, Job type) {
         if(experiences.get(player.getUniqueId()) == null)
+            return 0D;
+        if(!experiences.get(player.getUniqueId()).containsKey(type.getJobId()))
             return 0D;
         return experiences.get(player.getUniqueId()).get(type.getJobId());
     }

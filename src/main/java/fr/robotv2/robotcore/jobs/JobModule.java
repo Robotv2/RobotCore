@@ -4,7 +4,8 @@ import fr.robotv2.robotcore.api.MessageAPI;
 import fr.robotv2.robotcore.api.StringUtil;
 import fr.robotv2.robotcore.api.config.ConfigAPI;
 import fr.robotv2.robotcore.api.module.Module;
-import fr.robotv2.robotcore.jobs.command.RobotJobsCommand;
+import fr.robotv2.robotcore.core.RobotCore;
+import fr.robotv2.robotcore.jobs.command.JobsCommand;
 import fr.robotv2.robotcore.jobs.data.DataHandler;
 import fr.robotv2.robotcore.jobs.events.EventCaller;
 import fr.robotv2.robotcore.jobs.impl.job.Job;
@@ -22,6 +23,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public class JobModule implements Module {
@@ -37,7 +39,7 @@ public class JobModule implements Module {
     private PlayerManager playerManager;
     private DataHandler dataHandler;
 
-    private final Map<String, Job> jobs = new HashMap<>();
+    private final Map<String, Job> jobs = new ConcurrentHashMap<>();
 
     private final String PATH_TO_CONFIG = "job-module" + File.separator + "config";
 
@@ -64,6 +66,11 @@ public class JobModule implements Module {
     @Override
     public void onDisable() {}
 
+    public void onReload() {
+        this.jobMessage.getFile().reload();
+        this.loadJobsFromDataFolder();
+    }
+
     private void loadJobsFromDataFolder() {
         jobs.clear();
         File dataFolder = new File(plugin.getDataFolder() + File.separator + "job-module" + File.separator + "jobs");
@@ -73,8 +80,6 @@ public class JobModule implements Module {
             Arrays.stream(files).filter(File::isFile).forEach(this::registerJob);
         }
     }
-
-    //<-- GETTERS -->//
 
         //<-- JOBS ->>
 
@@ -156,7 +161,7 @@ public class JobModule implements Module {
             FileConfiguration configuration = YamlConfiguration.loadConfiguration(file);
             Job job = new Job(configuration, this);
             jobs.put(job.getJobId().getId(), job);
-            StringUtil.log("&7The job " + job.getName() + " &7has been successfully loaded.");
+            StringUtil.log("&7The job " + job.getName() + "&r &7has been successfully loaded.");
         } catch (Exception exception) {
             StringUtil.log("&cAn error occurred while trying to load the job for the file: " + file.getName());
             StringUtil.log("&cError message: " + exception.getMessage());
@@ -166,8 +171,8 @@ public class JobModule implements Module {
     private void registerDefaultJobs(File directory) {
         if(!directory.exists()) {
             directory.mkdir();
-            ConfigAPI.getConfig(directory + File.separator + "miner").setup();
-            ConfigAPI.getConfig(directory + File.separator + "lumberjack").setup();
+            ConfigAPI.getConfig("job-module" + File.separator + "jobs" + File.separator + "miner").setup();
+            ConfigAPI.getConfig("job-module" + File.separator + "jobs" + File.separator + "lumberjack").setup();
         }
     }
 
@@ -178,6 +183,12 @@ public class JobModule implements Module {
     }
 
     private void registerCommand() {
-        new RobotJobsCommand(getPlugin(), "jobs");
+        RobotCore.getInstance().getCommandManager().getCommandContexts().registerContext(Job.class, c -> {
+            return getJob(c.getFirstArg());
+        });
+        RobotCore.getInstance().getCommandManager().getCommandCompletions().registerCompletion("jobs", c -> {
+            return getJobsId();
+        });
+        RobotCore.getInstance().getCommandManager().registerCommand(new JobsCommand(this));
     }
 }

@@ -16,7 +16,7 @@ public class MessageAPI {
         this.config = config;
     }
 
-    public Config getFile(Config config) {
+    public Config getFile() {
         return config;
     }
 

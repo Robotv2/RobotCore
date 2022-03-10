@@ -32,7 +32,7 @@ public class BlockManager implements Listener {
     }
 
     @EventHandler
-    public void onBreak(BlockPlaceEvent event) {
+    public void onPlace(BlockPlaceEvent event) {
         this.setHasBeenPlaced(event.getBlock(), true);
     }
 }
