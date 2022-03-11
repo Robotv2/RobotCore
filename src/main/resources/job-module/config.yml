@@ -1,1 +1,9 @@
-data-type: YAML
+storage:
+  type: yaml
+  mysql-credentials:
+    host: my-host
+    port: my-port
+    database: my-database
+    username: my-username
+    password: my-password
+    use-ssl: true

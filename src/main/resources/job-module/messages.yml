@@ -1,1 +1,10 @@
-job-prefix: "&e&lJOB"
+prefix: "&e&lJOB &8- "
+
+#ERROR
+job-dont-exist: "&cThis job doesn't exist."
+already-has-job: "&cYou already have this job."
+dont-has-job: "&cYou don't have this job."
+
+#SUCCESS
+job-join: "&fYou have just joined the job: &e%job%"
+job-leave: "&fYou have just left the job of: &e%job%"

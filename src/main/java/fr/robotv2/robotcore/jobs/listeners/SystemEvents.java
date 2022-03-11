@@ -1,11 +1,10 @@
 package fr.robotv2.robotcore.jobs.listeners;
 
 import fr.robotv2.robotcore.jobs.JobModule;
-import fr.robotv2.robotcore.jobs.impl.job.JobAction;
 import fr.robotv2.robotcore.jobs.events.EntityKillByPlayerEvent;
 import fr.robotv2.robotcore.jobs.events.HarvestBreakEvent;
 import fr.robotv2.robotcore.jobs.events.HarvestPlaceEvent;
-import fr.robotv2.robotcore.jobs.events.PlayerKillByPlayerEvent;
+import fr.robotv2.robotcore.jobs.impl.job.JobAction;
 import fr.robotv2.robotcore.jobs.util.MatUtil;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -109,7 +108,7 @@ public record SystemEvents(JobModule jobModule) implements Listener {
 
         if(event.getFinalDamage() >= livingEntity.getHealth()) {
             EntityKillByPlayerEvent entityKillByPlayerEvent = new EntityKillByPlayerEvent(player, livingEntity);
-            jobModule.getCaller().call(JobAction.KILL_ENTITIES, entityKillByPlayerEvent);
+            jobModule.getCaller().call(JobAction.KILL, entityKillByPlayerEvent);
             if(entityKillByPlayerEvent.isCancelled()) event.setCancelled(true);
         }
     }

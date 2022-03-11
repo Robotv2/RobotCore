@@ -24,10 +24,11 @@ public class PlayerManager {
     public boolean initializePlayer(Player player) {
         try {
             JobData data = jobModule.getDataHandler().getData();
-            Set<Job> jobs = data.getJobs(player.getUniqueId());
+            Set<Job> jobs = data.getActiveJobs(player.getUniqueId());
             jobCache.put(player.getUniqueId(), jobs);
             return true;
         } catch (Exception exception) {
+            StringUtil.log("&cAn error occurred while loading " + player.getName() + "'s data. (jobs)");
             StringUtil.log("Error's message: " + exception.getMessage());
             return false;
         }
@@ -44,7 +45,6 @@ public class PlayerManager {
     public void joinJob(Player player, Job job) {
         if(hasJob(player, job)) return;
         getJobs(player).add(job);
-        StringUtil.sendMessage(player, "&fVous venez de rejoindre le métier de " + job.getName(), true);
     }
 
     public void quitJob(Player player, Job job) {
@@ -53,14 +53,17 @@ public class PlayerManager {
     }
 
     public void savePlayer(Player player) {
+
         JobData jobData = jobModule.getDataHandler().getData();
         LevelManager levelManager = jobModule.getLevelManager();
+        UUID playerUUID = player.getUniqueId();
+
         TaskUtil.runTask(() -> {
+            jobData.setActiveJobs(playerUUID, this.getJobs(player));
             for(Job job : this.getJobs(player)) {
-                jobData.setLevel(player.getUniqueId(), job.getJobId(), levelManager.getLevel(player, job));
-                jobData.setExp(player.getUniqueId(), job.getJobId(), levelManager.getExp(player, job));
+                jobData.setLevel(playerUUID, job.getJobId(), levelManager.getLevel(player, job));
+                jobData.setExp(playerUUID, job.getJobId(), levelManager.getExp(player, job));
             }
-            jobData.setJobs(player.getUniqueId(), this.getJobs(player));
         }, jobData.needAsync());
     }
 

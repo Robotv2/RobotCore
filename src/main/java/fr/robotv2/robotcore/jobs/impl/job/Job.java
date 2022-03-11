@@ -2,6 +2,7 @@ package fr.robotv2.robotcore.jobs.impl.job;
 
 import fr.robotv2.robotcore.api.dependencies.VaultAPI;
 import fr.robotv2.robotcore.jobs.JobModule;
+import fr.robotv2.robotcore.jobs.impl.bonus.Bonus;
 import fr.robotv2.robotcore.jobs.manager.RewardManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -68,11 +69,13 @@ public class Job {
     private void handleAction(Player player, String value, JobAction jobAction) {
         double moneyReward = rewardManager.getRewardMoneyFromConfig(jobAction, value);
         if(moneyReward != 0D) {
+            moneyReward = jobModule.getBonusManager().applyAllBonus(player, this, moneyReward, Bonus.Currency.MONEY);
             VaultAPI.giveMoney(player, moneyReward);
         }
 
         double expReward = rewardManager.getRewardExpFromConfig(jobAction, value);
         if(expReward != 0D) {
+            expReward = jobModule.getBonusManager().applyAllBonus(player, this, expReward, Bonus.Currency.EXP);
             jobModule.getLevelManager().giveExp(player, this, expReward);
             jobModule.getBossBarJob().sendBossBar(player, this);
         }

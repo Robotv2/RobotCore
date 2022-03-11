@@ -1,23 +1,33 @@
 package fr.robotv2.robotcore.jobs.data.stock;
 
 import fr.robotv2.robotcore.api.config.Config;
+import fr.robotv2.robotcore.api.config.ConfigAPI;
 import fr.robotv2.robotcore.jobs.JobModule;
 import fr.robotv2.robotcore.jobs.data.JobData;
 import fr.robotv2.robotcore.jobs.impl.job.Job;
 import fr.robotv2.robotcore.jobs.impl.job.JobId;
 import org.bukkit.configuration.ConfigurationSection;
 
+import java.io.File;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public record YamlData(JobModule jobModule,
-                       Config config) implements JobData {
+public class YamlData implements JobData {
+
+    private final JobModule jobModule;
+    private final Config config;
+
+    public YamlData(JobModule module) {
+        this.jobModule = module;
+        this.config = ConfigAPI.getConfig("job-module" + File.separator + "data");
+    }
 
     @Override
-    public void load() {}
+    public void load() {
+        this.config.setup();
+    }
 
     @Override
     public void initPlayer(UUID playerUUID) {}
@@ -36,36 +46,33 @@ public record YamlData(JobModule jobModule,
     }
 
     @Override
+    public Set<Job> getActiveJobs(UUID playerUUID) {
+        return getJobs(playerUUID).stream()
+                .filter(job -> isEnabled(playerUUID, job.getJobId().toString()))
+                .collect(Collectors.toSet());
+    }
+
     public Set<Job> getJobs(UUID playerUUID) {
         ConfigurationSection section = config.get().getConfigurationSection("players." + playerUUID);
         if (section == null)
             return new HashSet<>();
-
-        //Collect all the jobs idea to create a hash set of ids.
-        List<String> jobIds = jobModule.getJobsId();
-
-        //Check in the list if it contains the id and if it does, map it to a job and collect it.
         return section.getKeys(false)
-                .stream().filter(jobIds::contains).filter(id -> this.isEnabled(playerUUID, id))
-                .map(jobModule::getJob).collect(Collectors.toSet());
+                .stream().map(jobModule::getJob).collect(Collectors.toSet());
     }
 
     @Override
     public void setLevel(UUID playerUUID, JobId id, int value) {
         config.get().set("players." + playerUUID + "." + id + ".level", value);
-        save();
     }
 
     @Override
     public void setExp(UUID playerUUID, JobId id, double value) {
         config.get().set("players." + playerUUID + "." + id + ".exp", value);
-        save();
     }
 
     @Override
     public void setEnabled(UUID playerUUID, JobId jobId, boolean value) {
         config.get().set("players." + playerUUID + "." + jobId.getId() + ".enabled", value);
-        save();
     }
 
     public boolean isEnabled(UUID playerUUID, String jobId) {
@@ -73,14 +80,18 @@ public record YamlData(JobModule jobModule,
     }
 
     @Override
-    public void setJobs(UUID playerUUID, Set<Job> jobs) {
+    public void setActiveJobs(UUID playerUUID, Set<Job> jobs) {
         ConfigurationSection section = config.get().getConfigurationSection("players." + playerUUID);
         if(section == null) {
-            jobs.forEach(job -> {
-                this.setEnabled(playerUUID, job.getJobId(), true);
-            });
+            jobs.forEach(job -> this.setEnabled(playerUUID, job.getJobId(), true));
         } else {
-            section.getKeys(false).forEach(jobId -> {
+            Set<String> keys = section.getKeys(false);
+
+            //Enable all jobs.
+            jobs.forEach(job -> this.setEnabled(playerUUID, job.getJobId(), true));
+
+            //Checking in already registered keys to enable them or not.
+            keys.forEach(jobId -> {
                 Job job = jobModule.getJob(jobId);
                 if (job != null)
                     this.setEnabled(playerUUID, job.getJobId(), jobs.contains(job));

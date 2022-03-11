@@ -7,8 +7,8 @@ public class PersonalBonus extends Bonus {
 
     private final Player player;
 
-    public PersonalBonus(Player player, Job job, double pourcentage, long end) {
-        super(job, pourcentage, end);
+    public PersonalBonus(Player player, Job job, double pourcentage, int delay, Currency currency) {
+        super(job, pourcentage, delay, currency);
         this.player = player;
     }
 

@@ -14,11 +14,31 @@ import java.util.UUID;
 public class LevelManager {
 
     private final JobModule jobModule;
-    private final Map<UUID, Map<JobId, Integer>> levels = new HashMap<>();
-    private final Map<UUID, Map<JobId, Double>> experiences = new HashMap<>();
+    private final Map<UUID, JobLevelPlayerData> levelDatas = new HashMap<>();
 
     public LevelManager(JobModule jobModule) {
         this.jobModule = jobModule;
+    }
+
+    public static class JobLevelPlayerData {
+        private final Map<JobId, Integer> levels = new HashMap<>();
+        private final Map<JobId, Double> experiences = new HashMap<>();
+
+        public int getLevel(JobId id) {
+            return levels.get(id);
+        }
+
+        public double getExperiences(JobId id) {
+            return experiences.get(id);
+        }
+
+        public void setLevel(JobId id, Integer value) {
+            this.levels.put(id, value);
+        }
+
+        public void setExperiences(JobId id, Double value) {
+            this.experiences.put(id, value);
+        }
     }
 
     public boolean initializePlayer(Player player) {
@@ -26,55 +46,49 @@ public class LevelManager {
             JobData data = jobModule.getDataHandler().getData();
 
             UUID playerUUID = player.getUniqueId();
-            Map<JobId, Integer> levels = new HashMap<>();
-            Map<JobId, Double> experiences = new HashMap<>();
+            JobLevelPlayerData levelPlayerData = new JobLevelPlayerData();
 
-            for(Job job : data.getJobs(playerUUID)) {
-                levels.put(job.getJobId(), data.getLevel(playerUUID, job.getJobId()));
-                experiences.put(job.getJobId(), data.getExp(playerUUID, job.getJobId()));
+            for(Job job : data.getActiveJobs(playerUUID)) {
+                levelPlayerData.setLevel(job.getJobId(), data.getLevel(playerUUID, job.getJobId()));
+                levelPlayerData.setExperiences(job.getJobId(), data.getExp(playerUUID, job.getJobId()));
             }
 
-            this.levels.put(playerUUID, levels);
-            this.experiences.put(playerUUID, experiences);
-
+            levelDatas.put(playerUUID, levelPlayerData);
             return true;
         } catch (Exception exception) {
+            StringUtil.log("&cAn error occurred while loading " + player.getName() + "'s data. (levels)");
             StringUtil.log("Error's message: " + exception.getMessage());
             return false;
         }
     }
 
+    public JobLevelPlayerData getLevelPlayerData(UUID playerUUID) {
+        return levelDatas.get(playerUUID);
+    }
+
+    public JobLevelPlayerData getLevelPlayerData(Player player) {
+        return getLevelPlayerData(player.getUniqueId());
+    }
+
     public int getLevel(Player player, Job type) {
-        if(levels.get(player.getUniqueId()) == null)
-            return 0;
-        if(!levels.get(player.getUniqueId()).containsKey(type.getJobId()))
-            return 0;
-        return levels.get(player.getUniqueId()).get(type.getJobId());
+        return getLevelPlayerData(player).getLevel(type.getJobId());
     }
 
     public void setLevel(Player player, Job job, Integer level) {
-        Map<JobId, Integer> result = levels.get(player.getUniqueId());
-        result.put(job.getJobId(), level);
-        levels.put(player.getUniqueId(), result);
+        getLevelPlayerData(player).setLevel(job.getJobId(), level);
     }
 
     public Double getExp(Player player, Job type) {
-        if(experiences.get(player.getUniqueId()) == null)
-            return 0D;
-        if(!experiences.get(player.getUniqueId()).containsKey(type.getJobId()))
-            return 0D;
-        return experiences.get(player.getUniqueId()).get(type.getJobId());
+        return getLevelPlayerData(player).getExperiences(type.getJobId());
     }
 
     public void setExp(Player player, Job job, Double exp) {
-        Map<JobId, Double> result = experiences.get(player.getUniqueId());
-        result.put(job.getJobId(), exp);
-        experiences.put(player.getUniqueId(), result);
+        getLevelPlayerData(player).setExperiences(job.getJobId(), exp);
     }
 
     public void giveExp(Player player, Job job, Double value) {
         this.setExp(player, job, getExp(player, job) + value);
-        levelUp(player, job);
+        this.levelUp(player, job);
     }
 
     public Double getExpNeeded(Player player, Job job) {

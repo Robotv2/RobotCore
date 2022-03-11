@@ -1,9 +1,8 @@
 package fr.robotv2.robotcore.jobs.events;
 
 import fr.robotv2.robotcore.jobs.JobModule;
-import fr.robotv2.robotcore.jobs.impl.job.JobAction;
 import fr.robotv2.robotcore.jobs.impl.job.Job;
-import org.bukkit.entity.EntityType;
+import fr.robotv2.robotcore.jobs.impl.job.JobAction;
 import org.bukkit.entity.Item;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -46,7 +45,7 @@ public record EventCaller(JobModule jobModule) {
                         .forEach(job -> job.handleAction(blockBreakEvent.getPlayer(), blockBreakEvent.getBlock().getType(), jobAction));
             }
 
-            case KILL_ENTITIES -> {
+            case KILL -> {
                 EntityKillByPlayerEvent entityKillByPlayerEvent = (EntityKillByPlayerEvent) event;
                 jobs.stream()
                         .filter(job -> job.getActions().contains(jobAction))

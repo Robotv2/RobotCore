@@ -1,13 +1,12 @@
 package fr.robotv2.robotcore.jobs.data;
 
-import fr.robotv2.robotcore.api.StringUtil;
-import fr.robotv2.robotcore.api.config.ConfigAPI;
-import fr.robotv2.robotcore.jobs.JobModule;
-import fr.robotv2.robotcore.jobs.data.stock.YamlData;
 import fr.robotv2.robotcore.api.DataType;
+import fr.robotv2.robotcore.api.StringUtil;
+import fr.robotv2.robotcore.jobs.JobModule;
+import fr.robotv2.robotcore.jobs.data.stock.MysqlData;
+import fr.robotv2.robotcore.jobs.data.stock.SqlLiteData;
+import fr.robotv2.robotcore.jobs.data.stock.YamlData;
 import org.bukkit.configuration.file.FileConfiguration;
-
-import java.io.File;
 
 public class DataHandler {
 
@@ -16,24 +15,36 @@ public class DataHandler {
 
     public void initializeStorage(JobModule jobModule, FileConfiguration configuration) {
         String DATA_TYPE = configuration.getString("data-type");
-        if(DATA_TYPE != null) {
-            try {
-                DataType dataType = DataType.valueOf(DATA_TYPE.toUpperCase());
-                this.setDataType(dataType);
-            } catch (IllegalArgumentException exception) {
-                StringUtil.log(DATA_TYPE + " isn't a correct data-type.");
-            }
-        }
-        StringUtil.log("&fData type for the job module: &e" + dataType.toString());
+        this.setDataType(DATA_TYPE);
+        StringUtil.log("Data type for the job module: " + dataType.toString());
+        this.loadStorage(jobModule);
+    }
+
+    private void loadStorage(JobModule jobModule) {
         switch (dataType) {
-            case YAML -> {
-                data = new YamlData(jobModule, ConfigAPI.getConfig("job-module" + File.separator + "data"));
-            }
+            case YAML -> data = new YamlData(jobModule);
+            case MYSQL -> data = new MysqlData(jobModule);
+            case SQLITE -> data = new SqlLiteData(jobModule);
         }
+        getData().load();
     }
 
     public void setDataType(DataType type) {
         this.dataType = type;
+    }
+
+    public void setDataType(String type) {
+        if(type == null) {
+            this.setDataType(DataType.YAML);
+        } else {
+            try {
+                DataType dataType = DataType.valueOf(type.toUpperCase());
+                this.setDataType(dataType);
+            } catch (IllegalArgumentException exception) {
+                StringUtil.log(type + " isn't a correct data-type.");
+                this.setDataType(DataType.YAML);
+            }
+        }
     }
 
     public DataType getDataType() {

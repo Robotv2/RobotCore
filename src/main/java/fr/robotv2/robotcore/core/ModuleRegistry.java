@@ -23,10 +23,8 @@ public class ModuleRegistry {
     }
 
     public void registerModule(ModuleType type) {
-        Class[] arr = new Class[0];
-        Module module = null;
         try {
-            module = type.getModule().getDeclaredConstructor(arr).newInstance();
+            Module module = type.getModule().getDeclaredConstructor().newInstance();
             module.onEnable(core);
             modules.put(type, module);
             StringUtil.log("&aThe module " + type + " has been successfully registered and enabled.");

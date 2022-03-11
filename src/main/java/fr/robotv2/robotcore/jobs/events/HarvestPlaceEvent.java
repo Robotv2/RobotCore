@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class HarvestPlaceEvent extends PlayerEvent implements Cancellable {
 
+    private static final HandlerList HANDLERS = new HandlerList();
     private boolean cancel = false;
     private final Block farmLand;
     private final ItemStack seed;
@@ -22,7 +23,11 @@ public class HarvestPlaceEvent extends PlayerEvent implements Cancellable {
 
     @Override
     public @NotNull HandlerList getHandlers() {
-        return null;
+        return HANDLERS;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
     }
 
     public Block getFarmland() {

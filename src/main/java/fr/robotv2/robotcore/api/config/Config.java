@@ -25,7 +25,8 @@ public class Config {
     }
 
     public void setup() {
-        if(setup) return;
+        if(setup)
+            return;
         this.setup = true;
         if(this.database == null)
             database = new File(main.getDataFolder(), name + ".yml");

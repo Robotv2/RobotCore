@@ -3,16 +3,15 @@ package fr.robotv2.robotcore.api;
 import fr.robotv2.robotcore.api.config.Config;
 import org.bukkit.command.CommandSender;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MessageAPI {
 
-    private Config config;
-    private String prefix;
+    private final Config config;
+    private final Map<String, String> paths = new HashMap<>();
 
     public MessageAPI(Config config) {
-        this.config = config;
-    }
-
-    public void setFile(Config config) {
         this.config = config;
     }
 
@@ -20,23 +19,29 @@ public class MessageAPI {
         return config;
     }
 
-    public void setPrefix(String prefix) {
-        this.prefix = StringUtil.colorize(prefix);
-    }
-
     public String getPrefix() {
-        return prefix;
+        return getPath("prefix");
     }
 
     public String getPath(String path) {
-        return StringUtil.colorize(config.get().getString(path));
+        if(paths.containsKey(path))
+            return paths.get(path);
+        else {
+            String message = StringUtil.colorize(config.get().getString(path));
+            paths.put(path, message);
+            return message;
+        }
     }
 
-    public void sendMessage(CommandSender sender, String message) {
-        sender.sendMessage(message);
+    public void clearPaths() {
+        paths.clear();
     }
 
     public void sendPath(CommandSender sender, String path) {
-        this.sendMessage(sender, getPath(path));
+        StringUtil.sendMessage(sender, getPrefix() + getPath(path), false);
+    }
+
+    public void sendMessage(CommandSender sender, String message) {
+        StringUtil.sendMessage(sender, getPrefix() + message, false);
     }
 }

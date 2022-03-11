@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class HarvestBreakEvent extends PlayerEvent implements Cancellable {
 
+    private static final HandlerList HANDLERS = new HandlerList();
     private final Block block;
     private boolean cancel;
 
@@ -19,7 +20,11 @@ public class HarvestBreakEvent extends PlayerEvent implements Cancellable {
 
     @Override
     public @NotNull HandlerList getHandlers() {
-        return null;
+        return HANDLERS;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
     }
 
     public Block getBlock() {

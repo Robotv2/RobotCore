@@ -1,5 +1,6 @@
 package fr.robotv2.robotcore.api.module;
 
+import fr.robotv2.robotcore.core.RobotCore;
 import fr.robotv2.robotcore.jobs.JobModule;
 
 public enum ModuleType {
@@ -15,6 +16,6 @@ public enum ModuleType {
     }
 
     public boolean isEnabled() {
-        return true;
+        return RobotCore.getInstance().getModuleConfiguration().getBoolean("modules." + this.toString().toLowerCase());
     }
 }

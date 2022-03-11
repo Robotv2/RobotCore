@@ -9,8 +9,10 @@ import org.jetbrains.annotations.NotNull;
 
 public class EntityKillByPlayerEvent extends PlayerEvent implements Cancellable {
 
+    private static final HandlerList HANDLERS = new HandlerList();
     private final LivingEntity entity;
     private boolean cancel;
+
     public EntityKillByPlayerEvent(@NotNull Player who, LivingEntity livingEntity) {
         super(who);
         this.entity = livingEntity;
@@ -18,7 +20,11 @@ public class EntityKillByPlayerEvent extends PlayerEvent implements Cancellable 
 
     @Override
     public @NotNull HandlerList getHandlers() {
-        return null;
+        return HANDLERS;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
     }
 
     public LivingEntity getEntity() {

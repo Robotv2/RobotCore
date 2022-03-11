@@ -9,14 +9,14 @@ public class MatUtil {
 
     public static boolean isCrops(Material material) {
         return switch (material) {
-            case WHEAT, CARROT, BEETROOT, MELON_STEM, PUMPKIN -> true;
+            case WHEAT, CARROT, BEETROOT, MELON_STEM, PUMPKIN, POTATO -> true;
             default -> false;
         };
     }
 
     public static boolean isSeed(Material material) {
         return switch (material) {
-            case BEETROOT_SEEDS, MELON_SEEDS, PUMPKIN_SEEDS, WHEAT_SEEDS, CARROT -> true;
+            case BEETROOT_SEEDS, MELON_SEEDS, PUMPKIN_SEEDS, WHEAT_SEEDS, CARROT, POTATO -> true;
             default -> false;
         };
     }

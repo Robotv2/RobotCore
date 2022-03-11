@@ -3,6 +3,7 @@ package fr.robotv2.robotcore.jobs.manager;
 import fr.robotv2.robotcore.jobs.JobModule;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -31,7 +32,7 @@ public class BlockManager implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlace(BlockPlaceEvent event) {
         this.setHasBeenPlaced(event.getBlock(), true);
     }

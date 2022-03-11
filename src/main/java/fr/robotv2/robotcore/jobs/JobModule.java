@@ -12,23 +12,29 @@ import fr.robotv2.robotcore.jobs.impl.job.Job;
 import fr.robotv2.robotcore.jobs.listeners.PlayerEvents;
 import fr.robotv2.robotcore.jobs.listeners.SystemEvents;
 import fr.robotv2.robotcore.jobs.manager.BlockManager;
+import fr.robotv2.robotcore.jobs.manager.BonusManager;
 import fr.robotv2.robotcore.jobs.manager.LevelManager;
 import fr.robotv2.robotcore.jobs.manager.PlayerManager;
 import fr.robotv2.robotcore.jobs.util.ActionBarJob;
 import fr.robotv2.robotcore.jobs.util.BossBarJob;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public class JobModule implements Module {
 
     private JavaPlugin plugin;
+
     private EventCaller caller;
     private BossBarJob bossBarJob;
     private ActionBarJob actionBarJob;
@@ -37,6 +43,7 @@ public class JobModule implements Module {
     private BlockManager blockManager;
     private LevelManager levelManager;
     private PlayerManager playerManager;
+    private BonusManager bonusManager;
     private DataHandler dataHandler;
 
     private final Map<String, Job> jobs = new ConcurrentHashMap<>();
@@ -46,17 +53,18 @@ public class JobModule implements Module {
     @Override
     public void onEnable(JavaPlugin plugin) {
         this.plugin = plugin;
+
         this.dataHandler = new DataHandler();
         this.dataHandler.initializeStorage(this, this.getConfig());
         this.levelManager = new LevelManager(this);
         this.playerManager = new PlayerManager(this);
         this.blockManager = new BlockManager(this);
+        this.bonusManager = new BonusManager();
         this.caller = new EventCaller(this);
         this.bossBarJob = new BossBarJob(this);
         this.actionBarJob = new ActionBarJob();
 
         this.jobMessage = new MessageAPI(ConfigAPI.getConfig("job-module" + File.separator + "messages"));
-        this.jobMessage.setPrefix(getJobMessage().getPath("job-prefix"));
 
         loadJobsFromDataFolder();
         registerListener();
@@ -64,9 +72,13 @@ public class JobModule implements Module {
     }
 
     @Override
-    public void onDisable() {}
+    public void onDisable() {
+        getDataHandler().getData().close();
+        Bukkit.getOnlinePlayers().forEach(player -> getPlayerManager().savePlayer(player));
+    }
 
     public void onReload() {
+        this.jobMessage.clearPaths();
         this.jobMessage.getFile().reload();
         this.loadJobsFromDataFolder();
     }
@@ -128,6 +140,10 @@ public class JobModule implements Module {
 
     public BlockManager getBlockManager() {
         return blockManager;
+    }
+
+    public BonusManager getBonusManager() {
+        return bonusManager;
     }
 
     public MessageAPI getJobMessage() {

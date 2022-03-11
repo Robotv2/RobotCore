@@ -14,12 +14,12 @@ public interface JobData {
 
     int getLevel(UUID playerUUID, JobId id);
     double getExp(UUID playerUUID, JobId id);
-    Set<Job> getJobs(UUID playerUUID);
+    Set<Job> getActiveJobs(UUID playerUUID);
 
     void setLevel(UUID playerUUID, JobId id, int value);
     void setExp(UUID playerUUID, JobId id, double value);
     void setEnabled(UUID playerUUID, JobId id, boolean value);
-    void setJobs(UUID playerUUID, Set<Job> jobs);
+    void setActiveJobs(UUID playerUUID, Set<Job> jobs);
 
     boolean needAsync();
 }

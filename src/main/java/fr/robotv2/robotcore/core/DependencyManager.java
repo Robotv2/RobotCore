@@ -4,27 +4,25 @@ import co.aikar.commands.PaperCommandManager;
 import fr.robotv2.robotcore.api.StringUtil;
 import fr.robotv2.robotcore.api.dependencies.VaultAPI;
 
-import java.util.Locale;
-
 public class DependencyManager {
 
     private static PaperCommandManager manager;
 
     public static void loadDependencies() {
         DependencyManager.registerVault();
-        DependencyManager.loadAcf();
+        DependencyManager.registerAcf();
     }
 
     private static void registerVault() {
         if(VaultAPI.initialize()) {
             StringUtil.log("&aSuccessfully hooked into Vault.");
         } else {
-            StringUtil.log("&cVault couldn't be found, disabling...");
+            StringUtil.log("&cVault couldn't be found, Please make sure Vault is installed AND a valid economy plugin.");
             RobotCore.getInstance().disablePlugin();
         }
     }
 
-    private static void loadAcf() {
+    private static void registerAcf() {
         DependencyManager.manager = new PaperCommandManager(RobotCore.getInstance());
     }
 

@@ -7,14 +7,20 @@ public abstract class Bonus {
     private final Job job;
     private final double pourcentage;
     private final long end;
-    public Bonus(Job job, double pourcentage, long end) {
+    private Currency currency;
+
+    public enum Currency {
+        EXP, MONEY;
+    }
+
+    public Bonus(Job job, double pourcentage, int delay, Currency currency) {
         this.job = job;
         this.pourcentage = pourcentage;
-        if(end != -1) {
-            //TODO calculation
-            this.end = end * 1000;
+        this.currency = currency;
+        if(delay != -1) {
+            this.end = System.currentTimeMillis() + (delay * 60000L);
         } else {
-            this.end = end;
+            this.end = -1;
         }
     }
 
@@ -35,7 +41,15 @@ public abstract class Bonus {
         return getEnd() > System.currentTimeMillis();
     }
 
+    public long getRemaining() {
+        return this.end - System.currentTimeMillis();
+    }
+
+    public Currency getCurrency() {
+        return currency;
+    }
+
     public double apply(Number number) {
-        return number.doubleValue() * (1 + pourcentage);
+        return number.doubleValue() * (1 + getPourcentage() / 100);
     }
 }
