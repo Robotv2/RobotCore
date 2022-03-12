@@ -14,7 +14,7 @@ public class DataHandler {
     private JobData data;
 
     public void initializeStorage(JobModule jobModule, FileConfiguration configuration) {
-        String DATA_TYPE = configuration.getString("data-type");
+        String DATA_TYPE = configuration.getString("storage.type");
         this.setDataType(DATA_TYPE);
         StringUtil.log("Data type for the job module: " + dataType.toString());
         this.loadStorage(jobModule);

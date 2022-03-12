@@ -3,16 +3,16 @@ display: "&c&lMiner"
 color: red
 actions:
   BREAK:
-    diamond_ore:
+    DIAMOND_ORE:
       money: 10
       exp: 10
-    gold_ore:
+    GOLD_ORE:
       money: 5
       exp: 5
-    coal_ore:
+    COAL_ORE:
       money: 2
       exp: 2
-    stone:
+    STONE:
       money: 0.01
       exp: 0.01
 

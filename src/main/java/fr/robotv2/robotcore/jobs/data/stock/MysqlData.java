@@ -29,7 +29,7 @@ public class MysqlData implements JobData {
     protected void createMainTable() {
         try (Connection connection = getConnection()) {
             PreparedStatement ps = connection.prepareStatement(
-                     "CREATE TABLE IF NOT EXISTS " + TABLE_PLAYER_DATA + " ('UUID' VARCHAR(50) PRIMARY KEY, 'PLAYER_NAME' VARCHAR(50), 'JOB_ID' VARCHAR(100), 'LEVEL' INT, 'EXP' DOUBLE, 'ENABLED' BOOLEAN)");
+                     "CREATE TABLE IF NOT EXISTS " + TABLE_PLAYER_DATA + " ('UUID' VARCHAR(50), 'PLAYER_NAME' VARCHAR(50), 'JOB_ID' VARCHAR(100), 'LEVEL' INT, 'EXP' DOUBLE, 'ENABLED' BOOLEAN)");
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -144,6 +144,7 @@ public class MysqlData implements JobData {
         return jobs;
     }
 
+    @Override
     public Set<Job> getJobs(UUID playerUUID) {
         Set<Job> jobs = new HashSet<>();
 
@@ -151,7 +152,6 @@ public class MysqlData implements JobData {
 
             PreparedStatement statement = connection.prepareStatement("SELECT JOB_ID FROM " + TABLE_PLAYER_DATA + " WHERE (UUID=?)");
             statement.setString(1, playerUUID.toString());
-            statement.setBoolean(2, true);
             ResultSet result = statement.executeQuery();
 
             while(result.next()) {
@@ -221,7 +221,7 @@ public class MysqlData implements JobData {
         for(Job job : jobs) {
             if(!jobsRegistered.contains(job)) {
                 try(Connection connection = getConnection()) {
-                    PreparedStatement statement = connection.prepareStatement("INSERT INTO " + TABLE_PLAYER_DATA + " VALUES ('?', '?', '?', '?', '?', '?')");
+                    PreparedStatement statement = connection.prepareStatement("INSERT INTO " + TABLE_PLAYER_DATA + " VALUES (?, ?, ?, ?, ?, ?)");
                     statement.setString(1, playerUUID.toString());
                     statement.setString(2, Bukkit.getOfflinePlayer(playerUUID).getName());
                     statement.setString(3, job.getJobId().toString());

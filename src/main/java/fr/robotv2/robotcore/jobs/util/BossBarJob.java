@@ -31,7 +31,7 @@ public class BossBarJob {
 
         BossBar bar = BossBarUtil.createOrGetBar(player);
 
-        bar.setColor(BossBarUtil.toBarColor(job.getChatColor()));
+        bar.setColor(job.getChatColor());
         bar.setTitle(StringUtil.colorize(job.getName() + " &8| &7" + format.format(currentExp) + "&8/&7" + format.format(neededExp)));
         bar.setProgress(currentExp / neededExp);
         bar.setVisible(true);

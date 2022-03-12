@@ -27,9 +27,9 @@ public final class RobotCore extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        RobotCore.instance = null;
         if(getModuleRegistry() != null)
             getModuleRegistry().disableModules();
+        RobotCore.instance = null;
     }
 
     /**

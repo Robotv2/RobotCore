@@ -1,5 +1,5 @@
 storage:
-  type: yaml
+  type: SQLITE
   mysql-credentials:
     host: my-host
     port: my-port

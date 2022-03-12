@@ -49,10 +49,12 @@ public class JobModule implements Module {
     private final Map<String, Job> jobs = new ConcurrentHashMap<>();
 
     private final String PATH_TO_CONFIG = "job-module" + File.separator + "config";
+    public String PATH_TO_JOBS_DIRECT;
 
     @Override
     public void onEnable(JavaPlugin plugin) {
         this.plugin = plugin;
+        this.PATH_TO_JOBS_DIRECT = plugin.getDataFolder() + File.separator + "job-module" + File.separator + "jobs";
 
         this.dataHandler = new DataHandler();
         this.dataHandler.initializeStorage(this, this.getConfig());
@@ -73,23 +75,42 @@ public class JobModule implements Module {
 
     @Override
     public void onDisable() {
-        getDataHandler().getData().close();
         Bukkit.getOnlinePlayers().forEach(player -> getPlayerManager().savePlayer(player));
+        getDataHandler().getData().close();
     }
 
     public void onReload() {
         this.jobMessage.clearPaths();
         this.jobMessage.getFile().reload();
-        this.loadJobsFromDataFolder();
+        File[] jobs = getJobsFiles();
+        if(jobs == null) return;
+        for(File file : jobs) {
+            FileConfiguration configuration = YamlConfiguration.loadConfiguration(file);
+            String id = configuration.getString("id");
+            if(this.exist(id)) {
+                getJob(id).reload(configuration);
+            } else {
+                this.registerJob(file);
+            }
+        }
     }
 
     private void loadJobsFromDataFolder() {
-        jobs.clear();
-        File dataFolder = new File(plugin.getDataFolder() + File.separator + "job-module" + File.separator + "jobs");
-        this.registerDefaultJobs(dataFolder);
-        File[] files = dataFolder.listFiles();
-        if(files != null) {
-            Arrays.stream(files).filter(File::isFile).forEach(this::registerJob);
+        if(getJobsFiles() != null) {
+            Arrays.stream(getJobsFiles())
+                    .filter(File::isFile).forEach(this::registerJob);
+        }
+    }
+
+    private File[] getJobsFiles() {
+        File directory = new File(plugin.getDataFolder() + File.separator + "job-module" + File.separator + "jobs");
+        if(!directory.exists()) {
+            this.registerDefaultJobs();
+            return getJobsFiles();
+        } else if(directory.listFiles() != null){
+            return directory.listFiles();
+        } else {
+            return null;
         }
     }
 
@@ -184,12 +205,9 @@ public class JobModule implements Module {
         }
     }
 
-    private void registerDefaultJobs(File directory) {
-        if(!directory.exists()) {
-            directory.mkdir();
-            ConfigAPI.getConfig("job-module" + File.separator + "jobs" + File.separator + "miner").setup();
-            ConfigAPI.getConfig("job-module" + File.separator + "jobs" + File.separator + "lumberjack").setup();
-        }
+    private void registerDefaultJobs() {
+        ConfigAPI.getConfig("job-module" + File.separator + "jobs" + File.separator + "miner").setup();
+        ConfigAPI.getConfig("job-module" + File.separator + "jobs" + File.separator + "lumberjack").setup();
     }
 
     private void registerListener() {

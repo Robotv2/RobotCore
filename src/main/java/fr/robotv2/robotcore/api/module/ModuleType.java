@@ -11,7 +11,7 @@ public enum ModuleType {
         this.module = module;
     }
 
-    public Class<? extends Module> getModule() {
+    public Class<? extends Module> getModuleClass() {
         return module;
     }
 

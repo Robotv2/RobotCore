@@ -1,5 +1,6 @@
 package fr.robotv2.robotcore.jobs.impl.bonus;
 
+import fr.robotv2.robotcore.jobs.impl.Currency;
 import fr.robotv2.robotcore.jobs.impl.job.Job;
 import org.bukkit.entity.Player;
 

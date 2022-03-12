@@ -1,5 +1,6 @@
 package fr.robotv2.robotcore.jobs.impl.bonus;
 
+import fr.robotv2.robotcore.jobs.impl.Currency;
 import fr.robotv2.robotcore.jobs.impl.job.Job;
 
 public abstract class Bonus {
@@ -7,11 +8,7 @@ public abstract class Bonus {
     private final Job job;
     private final double pourcentage;
     private final long end;
-    private Currency currency;
-
-    public enum Currency {
-        EXP, MONEY;
-    }
+    private final Currency currency;
 
     public Bonus(Job job, double pourcentage, int delay, Currency currency) {
         this.job = job;

@@ -52,12 +52,13 @@ public class YamlData implements JobData {
                 .collect(Collectors.toSet());
     }
 
+    @Override
     public Set<Job> getJobs(UUID playerUUID) {
         ConfigurationSection section = config.get().getConfigurationSection("players." + playerUUID);
         if (section == null)
             return new HashSet<>();
-        return section.getKeys(false)
-                .stream().map(jobModule::getJob).collect(Collectors.toSet());
+        return section.getKeys(false).stream()
+                .filter(jobModule::exist).map(jobModule::getJob).collect(Collectors.toSet());
     }
 
     @Override

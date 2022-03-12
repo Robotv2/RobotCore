@@ -6,6 +6,7 @@ import fr.robotv2.robotcore.jobs.data.JobData;
 import fr.robotv2.robotcore.jobs.impl.job.Job;
 import fr.robotv2.robotcore.jobs.impl.job.JobId;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,11 +26,11 @@ public class LevelManager {
         private final Map<JobId, Double> experiences = new HashMap<>();
 
         public int getLevel(JobId id) {
-            return levels.get(id);
+            return levels.getOrDefault(id, 0);
         }
 
         public double getExperiences(JobId id) {
-            return experiences.get(id);
+            return experiences.getOrDefault(id, 0D) ;
         }
 
         public void setLevel(JobId id, Integer value) {
@@ -48,7 +49,7 @@ public class LevelManager {
             UUID playerUUID = player.getUniqueId();
             JobLevelPlayerData levelPlayerData = new JobLevelPlayerData();
 
-            for(Job job : data.getActiveJobs(playerUUID)) {
+            for(Job job : data.getJobs(playerUUID)) {
                 levelPlayerData.setLevel(job.getJobId(), data.getLevel(playerUUID, job.getJobId()));
                 levelPlayerData.setExperiences(job.getJobId(), data.getExp(playerUUID, job.getJobId()));
             }
@@ -108,7 +109,7 @@ public class LevelManager {
 
         StringUtil.sendMessage(
                 player,
-                "&7You have just passed level &f" + getLevel(player, job) + " &7for the job " + job.getChatColor() + job.getName() + " &7!",
+                "&7You have just passed level &f" + getLevel(player, job) + " &7for the job " + job.getName() + " &7!",
                 true);
     }
 }

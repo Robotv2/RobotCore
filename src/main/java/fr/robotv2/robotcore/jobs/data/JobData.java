@@ -14,6 +14,7 @@ public interface JobData {
 
     int getLevel(UUID playerUUID, JobId id);
     double getExp(UUID playerUUID, JobId id);
+    Set<Job> getJobs(UUID playerUUID);
     Set<Job> getActiveJobs(UUID playerUUID);
 
     void setLevel(UUID playerUUID, JobId id, int value);
