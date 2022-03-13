@@ -16,6 +16,7 @@ public enum ModuleType {
     }
 
     public boolean isEnabled() {
-        return RobotCore.getInstance().getModuleConfiguration().getBoolean("modules." + this.toString().toLowerCase());
+        return RobotCore.getInstance().getModuleRegistry()
+                .getModuleConfiguration().getBoolean("modules." + this.toString().toLowerCase());
     }
 }

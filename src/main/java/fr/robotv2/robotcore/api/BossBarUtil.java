@@ -28,12 +28,4 @@ public class BossBarUtil {
     public static void clearPlayer(Player player) {
         bossBars.remove(player.getUniqueId());
     }
-
-    public static BarColor toBarColor(ChatColor color) {
-        try {
-            return BarColor.valueOf(color.toString());
-        } catch(IllegalArgumentException e) {
-            return BarColor.WHITE;
-        }
-    }
 }

@@ -5,31 +5,31 @@ import fr.robotv2.robotcore.api.config.Config;
 import fr.robotv2.robotcore.api.config.ConfigAPI;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.Nullable;
 
 public final class RobotCore extends JavaPlugin {
 
     public static boolean stop = false;
-    private static RobotCore instance;
+    public static RobotCore instance;
 
     private ModuleRegistry registry;
-    private Config moduleConfig;
 
     @Override
     public void onEnable() {
-        RobotCore.instance = this;
-
-        ConfigAPI.init(this);
-        moduleConfig = ConfigAPI.getConfig("modules");
+        this.setInstance(this);
 
         DependencyManager.loadDependencies();
-        if(!stop) this.registry = new ModuleRegistry(this);
+        if(stop) return;
+
+        this.registry = new ModuleRegistry(this);
+        this.registry.enableModules();
     }
 
     @Override
     public void onDisable() {
         if(getModuleRegistry() != null)
             getModuleRegistry().disableModules();
-        RobotCore.instance = null;
+        this.setInstance(null);
     }
 
     /**
@@ -39,18 +39,8 @@ public final class RobotCore extends JavaPlugin {
         return instance;
     }
 
-    /**
-     * @return the file configuration of the file 'modules.yml'.
-     */
-    public FileConfiguration getModuleConfiguration() {
-        return moduleConfig.get();
-    }
-
-    /**
-     * save the file 'modules.yml'.
-     */
-    public void saveModuleConfiguration() {
-        moduleConfig.save();
+    public void setInstance(@Nullable RobotCore core) {
+        RobotCore.instance = core;
     }
 
     /**

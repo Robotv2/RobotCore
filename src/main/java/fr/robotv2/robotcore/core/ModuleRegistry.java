@@ -1,13 +1,11 @@
 package fr.robotv2.robotcore.core;
 
 import fr.robotv2.robotcore.api.StringUtil;
+import fr.robotv2.robotcore.api.config.Config;
+import fr.robotv2.robotcore.api.config.ConfigAPI;
 import fr.robotv2.robotcore.api.module.Module;
 import fr.robotv2.robotcore.api.module.ModuleType;
-import fr.robotv2.robotcore.jobs.JobModule;
-import org.apache.commons.lang.Validate;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.plugin.java.PluginClassLoader;
-import org.jetbrains.annotations.NotNull;
+import org.bukkit.configuration.file.FileConfiguration;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
@@ -18,14 +16,11 @@ public class ModuleRegistry {
 
     private final RobotCore core;
     private final Map<ModuleType, Module> modules = new HashMap<>();
-    JobModule jobModule;
+    private final Config moduleConfig;
 
     public ModuleRegistry(RobotCore core) {
         this.core = core;
-        //Query all available modules and registered them.
-        Arrays.stream(ModuleType.values())
-                .filter(ModuleType::isEnabled)
-                .forEach(this::registerModule);
+        this.moduleConfig = ConfigAPI.getConfig("modules");
     }
 
     public void registerModule(ModuleType type) {
@@ -39,6 +34,10 @@ public class ModuleRegistry {
         }
     }
 
+    public void enableModules() {
+        Arrays.stream(ModuleType.values()).filter(ModuleType::isEnabled).forEach(this::registerModule);
+    }
+
     public void disableModules() {
         modules.values().forEach(Module::onDisable);
     }
@@ -48,13 +47,15 @@ public class ModuleRegistry {
             throw new IllegalArgumentException("The type " + type + " isn't registered.");
     }
 
-    public JobModule getJobModule() {
-        this.checkModule(ModuleType.JOB);
-        return (JobModule) modules.get(ModuleType.JOB);
-    }
-
-    private <T extends Module> T getModule(Class<T> clazz, ModuleType type) {
+    public <T extends Module> T getModule(Class<T> clazz, ModuleType type) {
         this.checkModule(type);
         return clazz.cast(type.getModuleClass());
+    }
+
+    /**
+     * @return the file configuration of the file 'modules.yml'.
+     */
+    public FileConfiguration getModuleConfiguration() {
+        return moduleConfig.get();
     }
 }

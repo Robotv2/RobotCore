@@ -34,7 +34,7 @@ public record SystemEvents(JobModule jobModule) implements Listener {
         //Check if the clicked block is the face up of a farmland.
         if (block == null
                 || block.getType() != Material.FARMLAND
-                || block.getFace(block) != BlockFace.UP
+                || event.getBlockFace() != BlockFace.UP
                 || event.getAction() != Action.RIGHT_CLICK_BLOCK)
             return;
 
@@ -109,7 +109,8 @@ public record SystemEvents(JobModule jobModule) implements Listener {
         if(event.getFinalDamage() >= livingEntity.getHealth()) {
             EntityKillByPlayerEvent entityKillByPlayerEvent = new EntityKillByPlayerEvent(player, livingEntity);
             jobModule.getCaller().call(JobAction.KILL, entityKillByPlayerEvent);
-            if(entityKillByPlayerEvent.isCancelled()) event.setCancelled(true);
+            if(entityKillByPlayerEvent.isCancelled())
+                event.setCancelled(true);
         }
     }
 

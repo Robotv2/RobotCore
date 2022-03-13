@@ -19,7 +19,7 @@ public class JobsCommand extends BaseCommand {
     @Subcommand("join")
     @CommandCompletion("@jobs")
     @CommandPermission("robotcore.job.command.join")
-    @Syntax("&c&lUSAGE: &c/jobs join <job>")
+    @Syntax("<job>")
     public void onJobJoin(Player player, Job job) {
         //job doesn't exist.
         if(job == null) {
@@ -42,7 +42,7 @@ public class JobsCommand extends BaseCommand {
     @Subcommand("leave")
     @CommandCompletion("@jobs")
     @CommandPermission("robotcore.job.command.quit")
-    @Syntax("&c&lUSAGE: &c/jobs quit <job>")
+    @Syntax("<job>")
     public void onJoinLeave(Player player, Job job) {
         //job doesn't exist.
         if(job == null) {
@@ -65,7 +65,7 @@ public class JobsCommand extends BaseCommand {
     @Subcommand("info")
     @CommandCompletion("@jobs")
     @CommandPermission("robotcore.job.command.info")
-    @Syntax("&c&lUSAGE: &c/jobs info <job>")
+    @Syntax("<job>")
     public void onJobInfo(Player player, Job job) {
         //job doesn't exist.
         if(job == null) {
@@ -86,7 +86,6 @@ public class JobsCommand extends BaseCommand {
 
     @Subcommand("reload")
     @CommandPermission("robotcore.job.command.reload")
-    @Syntax("&c&lUSAGE: &c/jobs reload")
     public void onReload(Player player) {
         module.onReload();
         StringUtil.sendMessage(player, "&aThe job module has been reloaded successfully.", true);

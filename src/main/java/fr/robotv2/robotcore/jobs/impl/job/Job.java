@@ -4,7 +4,6 @@ import fr.robotv2.robotcore.api.dependencies.VaultAPI;
 import fr.robotv2.robotcore.jobs.JobModule;
 import fr.robotv2.robotcore.jobs.impl.Currency;
 import fr.robotv2.robotcore.jobs.manager.RewardManager;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.boss.BarColor;
 import org.bukkit.configuration.Configuration;
@@ -13,41 +12,42 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class Job {
 
-    private String name;
-    private BarColor barColor;
-    private Set<JobAction> actions;
-    private Configuration configuration;
-
     private final JobId id;
+    private final String name;
+    private final BarColor barColor;
+
+    private final Set<JobAction> actions;
+    private final FileConfiguration configuration;
+
     private final JobModule jobModule;
     private final RewardManager rewardManager;
 
     public Job(FileConfiguration configuration, JobModule jobModule) {
+        //Config values.
         this.id = new JobId(configuration.getString("id"));
-        this.jobModule = jobModule;
-        this.rewardManager = new RewardManager(configuration);
-        reload(configuration);
-    }
-
-    public void reload(FileConfiguration configuration) {
-        this.configuration = configuration;
-        System.out.println(configuration.getName());
         this.name = configuration.getString("display");
         this.barColor = BarColor.valueOf(Objects.requireNonNull(configuration.getString("color")).toUpperCase());
+
+        //Actions.
         ConfigurationSection section = configuration.getConfigurationSection("actions");
-        this.rewardManager.clear(configuration);
         if(section != null) {
-            this.actions = section.getKeys(false).stream().map(actionStr -> JobAction.valueOf(actionStr.toUpperCase())).collect(Collectors.toSet());
+            this.actions = section.getKeys(false)
+                    .stream().map(actionStr -> JobAction.valueOf(actionStr.toUpperCase()))
+                    .collect(Collectors.toSet());
         } else {
-            this.actions = new HashSet<>();
+            this.actions = Collections.emptySet();
         }
+
+        this.rewardManager = new RewardManager(configuration);
+        this.jobModule = jobModule;
+        this.configuration = configuration;
     }
 
     public JobId getJobId() {

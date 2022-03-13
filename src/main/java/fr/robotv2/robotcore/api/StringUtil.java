@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender;
 
 public class StringUtil {
 
-    private static String PREFIX = "&c&lROBOTCORE &8&l- ";
+    private static final String PREFIX = "&c&lROBOTCORE &8&l- ";
 
     public static String colorize(String message) {
         return ChatColor.translateAlternateColorCodes('&', message);
@@ -18,10 +18,6 @@ public class StringUtil {
 
     public static String getPrefix() {
         return StringUtil.colorize(PREFIX);
-    }
-
-    public static void setPrefix(String prefix) {
-        PREFIX = prefix;
     }
 
     public static void sendMessage(CommandSender sender, String message, boolean prefix) {

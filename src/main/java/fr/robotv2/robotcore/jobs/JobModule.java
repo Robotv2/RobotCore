@@ -17,17 +17,14 @@ import fr.robotv2.robotcore.jobs.manager.LevelManager;
 import fr.robotv2.robotcore.jobs.manager.PlayerManager;
 import fr.robotv2.robotcore.jobs.util.ActionBarJob;
 import fr.robotv2.robotcore.jobs.util.BossBarJob;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -58,52 +55,46 @@ public class JobModule implements Module {
 
         this.dataHandler = new DataHandler();
         this.dataHandler.initializeStorage(this, this.getConfig());
+
         this.levelManager = new LevelManager(this);
         this.playerManager = new PlayerManager(this);
+
         this.blockManager = new BlockManager(this);
-        this.bonusManager = new BonusManager();
         this.caller = new EventCaller(this);
+        this.bonusManager = new BonusManager();
+
         this.bossBarJob = new BossBarJob(this);
         this.actionBarJob = new ActionBarJob();
-
         this.jobMessage = new MessageAPI(ConfigAPI.getConfig("job-module" + File.separator + "messages"));
 
-        loadJobsFromDataFolder();
+        loadJobsFromDir();
         registerListener();
         registerCommand();
     }
 
     @Override
     public void onDisable() {
-        Bukkit.getOnlinePlayers().forEach(player -> getPlayerManager().savePlayer(player));
         getDataHandler().getData().close();
     }
 
     public void onReload() {
         this.jobMessage.clearPaths();
         this.jobMessage.getFile().reload();
-        File[] jobs = getJobsFiles();
-        if(jobs == null) return;
-        for(File file : jobs) {
-            FileConfiguration configuration = YamlConfiguration.loadConfiguration(file);
-            String id = configuration.getString("id");
-            if(this.exist(id)) {
-                getJob(id).reload(configuration);
-            } else {
-                this.registerJob(file);
-            }
-        }
+
+        //Reload jobs.
+        this.jobs.clear();
+        this.loadJobsFromDir();
     }
 
-    private void loadJobsFromDataFolder() {
-        if(getJobsFiles() != null) {
-            Arrays.stream(getJobsFiles())
-                    .filter(File::isFile).forEach(this::registerJob);
-        }
+    private void loadJobsFromDir() {
+        if(getJobsFiles() == null) return;
+        Arrays.stream(getJobsFiles())
+                .filter(File::isFile)
+                .forEach(this::registerJob);
     }
 
     private File[] getJobsFiles() {
-        File directory = new File(plugin.getDataFolder() + File.separator + "job-module" + File.separator + "jobs");
+        File directory = new File(PATH_TO_JOBS_DIRECT);
         if(!directory.exists()) {
             this.registerDefaultJobs();
             return getJobsFiles();
@@ -120,6 +111,7 @@ public class JobModule implements Module {
         return getJob(id) != null || getJobsId().contains(id);
     }
 
+    @Nullable
     public Job getJob(String id) {
         return jobs.get(id);
     }
@@ -128,9 +120,9 @@ public class JobModule implements Module {
         return jobs.values();
     }
 
-    public List<String> getJobsId() {
+    public Set<String> getJobsId() {
         return getJobs().stream().map(job -> job.getJobId().getId())
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
         //<-- CLASSES ->>

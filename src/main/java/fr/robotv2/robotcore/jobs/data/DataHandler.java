@@ -10,7 +10,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 public class DataHandler {
 
-    private DataType dataType = DataType.YAML;
+    private DataType dataType = DataType.SQLITE;
     private JobData data;
 
     public void initializeStorage(JobModule jobModule, FileConfiguration configuration) {
@@ -34,15 +34,15 @@ public class DataHandler {
     }
 
     public void setDataType(String type) {
-        if(type == null) {
-            this.setDataType(DataType.YAML);
+        if(type == null || type.isBlank()) {
+            this.setDataType(DataType.SQLITE);
         } else {
             try {
                 DataType dataType = DataType.valueOf(type.toUpperCase());
                 this.setDataType(dataType);
             } catch (IllegalArgumentException exception) {
                 StringUtil.log(type + " isn't a correct data-type.");
-                this.setDataType(DataType.YAML);
+                this.setDataType(DataType.SQLITE);
             }
         }
     }

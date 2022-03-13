@@ -10,16 +10,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class RewardManager {
 
-    private FileConfiguration config;
+    private final FileConfiguration config;
     private final Map<JobAction, RewardContainer> containers = new ConcurrentHashMap<>();
 
     public RewardManager(FileConfiguration configuration) {
       this.config = configuration;
-    }
-
-    public void clear(FileConfiguration configuration) {
-        containers.clear();
-        this.config = configuration;
     }
 
     public static class RewardContainer {
@@ -53,7 +48,7 @@ public class RewardManager {
             }
         }
 
-        public boolean hasRewardExp(String value, Currency currency) {
+        public boolean hasReward(String value, Currency currency) {
             switch (currency) {
                 case EXP -> {
                     return exps.containsKey(value.toLowerCase());
@@ -82,7 +77,7 @@ public class RewardManager {
         }
 
         RewardContainer container = containers.get(action);
-        if(!container.hasRewardExp(value, currency)) {
+        if(!container.hasReward(value, currency)) {
             container.registerRewardFromConfig(value, currency);
         }
     }

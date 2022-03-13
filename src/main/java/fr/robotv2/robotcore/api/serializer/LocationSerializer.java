@@ -3,6 +3,7 @@ package fr.robotv2.robotcore.api.serializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class LocationSerializer {
@@ -23,14 +24,14 @@ public class LocationSerializer {
         return new Location(world, x, y, z, yaw, pitch);
     }
 
-    public static String toString(Location location) {
+    public static String toString(@NotNull Location location) {
 
         double x = location.getX();
         double y = location.getY();
         double z = location.getZ();
         float yaw = location.getYaw();
         float pitch = location.getPitch();
-        World world = location.getWorld();
+        String world = location.getWorld().getName();
         String coma = ";";
 
         return x + coma + y + coma + z + coma + yaw + coma + pitch + coma + world;

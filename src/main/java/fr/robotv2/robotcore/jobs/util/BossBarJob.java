@@ -30,11 +30,15 @@ public class BossBarJob {
         double neededExp = jobModule.getLevelManager().getExpNeeded(player, job);
 
         BossBar bar = BossBarUtil.createOrGetBar(player);
-
         bar.setColor(job.getChatColor());
-        bar.setTitle(StringUtil.colorize(job.getName() + " &8| &7" + format.format(currentExp) + "&8/&7" + format.format(neededExp)));
+
+        String formattedExp = format.format(currentExp);
+        String formattedNeededExp = format.format(neededExp);
+
+        bar.setTitle(StringUtil.colorize(job.getName() + " &8| &7" + formattedExp + "&8/&7" + formattedNeededExp));
         bar.setProgress(currentExp / neededExp);
         bar.setVisible(true);
+
         if(!bar.getPlayers().contains(player))
             bar.addPlayer(player);
 
