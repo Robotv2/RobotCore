@@ -1,7 +1,7 @@
 package fr.robotv2.robotcore.jobs.data;
 
-import fr.robotv2.robotcore.api.DataType;
-import fr.robotv2.robotcore.api.StringUtil;
+import fr.robotv2.robotcore.shared.data.DataType;
+import fr.robotv2.robotcore.shared.StringUtil;
 import fr.robotv2.robotcore.jobs.JobModule;
 import fr.robotv2.robotcore.jobs.data.stock.MysqlData;
 import fr.robotv2.robotcore.jobs.data.stock.SqlLiteData;

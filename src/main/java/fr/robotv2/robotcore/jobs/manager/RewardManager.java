@@ -2,6 +2,7 @@ package fr.robotv2.robotcore.jobs.manager;
 
 import fr.robotv2.robotcore.jobs.impl.Currency;
 import fr.robotv2.robotcore.jobs.impl.job.JobAction;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.HashMap;
@@ -31,8 +32,10 @@ public class RewardManager {
 
         public void registerRewardFromConfig(String value, Currency currency) {
             switch (currency) {
-                case MONEY -> this.moneys.put(value.toLowerCase(), config.getDouble("actions." + action.toString() + "." + value + ".money", 0D));
-                case EXP -> this.exps.put(value.toLowerCase(), config.getDouble("actions." + action.toString() + "." + value + ".exp", 0D));
+                case MONEY -> {
+                    this.moneys.put(value.toLowerCase(), config.getDouble("actions." + action.toString() + "." + value + ".money", config.getDouble("actions." + action + "." + value.toLowerCase() + ".money", 0D)));
+                }
+                case EXP -> this.exps.put(value.toLowerCase(), config.getDouble("actions." + action.toString() + "." + value + ".exp", config.getDouble("actions." + action + "." + value.toLowerCase() + ".exp", 0D)));
             }
         }
 

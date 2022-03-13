@@ -1,6 +1,23 @@
 id: miner
 display: "&c&lMiner"
-color: red
+bar-color: red
+
+leveling-system:
+  max-level: 150
+  exp-needed: (level * 30.5) * (level * level)
+
+gui:
+  slot: 3
+  material: STONE_PICKAXE
+  name: "&c&lMiner &7job"
+  lore:
+    - "&fDescription:"
+    - " &7Break ores to earn money !"
+    - ""
+    - "&eStats:"
+    - " &7Level: &e%level%"
+    - " &7exp: &e%exp%"
+
 actions:
   BREAK:
     DIAMOND_ORE:

@@ -1,16 +1,14 @@
 package fr.robotv2.robotcore.core;
 
 import co.aikar.commands.PaperCommandManager;
-import fr.robotv2.robotcore.api.config.Config;
-import fr.robotv2.robotcore.api.config.ConfigAPI;
-import org.bukkit.configuration.file.FileConfiguration;
+import net.objecthunter.exp4j.ExpressionBuilder;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
 
 public final class RobotCore extends JavaPlugin {
 
-    public static boolean stop = false;
-    public static RobotCore instance;
+    private static boolean stop = false;
+    private static RobotCore instance;
 
     private ModuleRegistry registry;
 

@@ -1,4 +1,4 @@
-package fr.robotv2.robotcore.api.module;
+package fr.robotv2.robotcore.shared.module;
 
 import fr.robotv2.robotcore.core.RobotCore;
 import fr.robotv2.robotcore.jobs.JobModule;

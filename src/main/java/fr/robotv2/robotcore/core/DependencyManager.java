@@ -1,9 +1,10 @@
 package fr.robotv2.robotcore.core;
 
 import co.aikar.commands.PaperCommandManager;
-import fr.robotv2.robotcore.api.StringUtil;
-import fr.robotv2.robotcore.api.config.ConfigAPI;
-import fr.robotv2.robotcore.api.dependencies.VaultAPI;
+import fr.robotv2.robotcore.shared.StringUtil;
+import fr.robotv2.robotcore.shared.config.ConfigAPI;
+import fr.robotv2.robotcore.shared.dependencies.VaultAPI;
+import fr.robotv2.robotcore.shared.ui.GuiAPI;
 
 public class DependencyManager {
 
@@ -30,6 +31,10 @@ public class DependencyManager {
 
     private static void registerConfigAPI() {
         ConfigAPI.init(RobotCore.getInstance());
+    }
+
+    private static void registerUI() {
+        RobotCore.getInstance().getServer().getPluginManager().registerEvents(new GuiAPI(), RobotCore.getInstance());
     }
 
     public static PaperCommandManager getCommandManager() {

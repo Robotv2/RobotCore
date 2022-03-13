@@ -1,4 +1,4 @@
-package fr.robotv2.robotcore.api.dependencies;
+package fr.robotv2.robotcore.shared.dependencies;
 
 import fr.robotv2.robotcore.core.RobotCore;
 import net.milkbowl.vault.economy.Economy;

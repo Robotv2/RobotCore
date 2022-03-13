@@ -2,7 +2,7 @@ package fr.robotv2.robotcore.jobs.command;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
-import fr.robotv2.robotcore.api.StringUtil;
+import fr.robotv2.robotcore.shared.StringUtil;
 import fr.robotv2.robotcore.jobs.JobModule;
 import fr.robotv2.robotcore.jobs.impl.job.Job;
 import org.bukkit.entity.Player;

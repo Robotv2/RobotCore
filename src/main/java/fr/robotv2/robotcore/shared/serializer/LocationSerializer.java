@@ -1,4 +1,4 @@
-package fr.robotv2.robotcore.api.serializer;
+package fr.robotv2.robotcore.shared.serializer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

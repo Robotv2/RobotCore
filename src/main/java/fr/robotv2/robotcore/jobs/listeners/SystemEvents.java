@@ -28,6 +28,9 @@ public record SystemEvents(JobModule jobModule) implements Listener {
      */
     @EventHandler
     public void plantSeed(PlayerInteractEvent event) {
+
+        //TODO player can't plant and break seed unlimitedly TO FIX.
+
         Player player = event.getPlayer();
         Block block = event.getClickedBlock();
 
@@ -61,9 +64,6 @@ public record SystemEvents(JobModule jobModule) implements Listener {
      */
     @EventHandler
     public void onBreakOfCrops(BlockBreakEvent event) {
-        if(jobModule.getBlockManager().hasBeenPlaced(event.getBlock()))
-            return;
-
         Player player = event.getPlayer();
         Block block = event.getBlock();
 

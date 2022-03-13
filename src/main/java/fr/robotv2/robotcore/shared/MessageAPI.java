@@ -1,6 +1,6 @@
-package fr.robotv2.robotcore.api;
+package fr.robotv2.robotcore.shared;
 
-import fr.robotv2.robotcore.api.config.Config;
+import fr.robotv2.robotcore.shared.config.Config;
 import org.bukkit.command.CommandSender;
 
 import java.util.HashMap;

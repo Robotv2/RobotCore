@@ -1,4 +1,4 @@
-package fr.robotv2.robotcore.api.config;
+package fr.robotv2.robotcore.shared.config;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;

@@ -1,10 +1,10 @@
 package fr.robotv2.robotcore.core;
 
-import fr.robotv2.robotcore.api.StringUtil;
-import fr.robotv2.robotcore.api.config.Config;
-import fr.robotv2.robotcore.api.config.ConfigAPI;
-import fr.robotv2.robotcore.api.module.Module;
-import fr.robotv2.robotcore.api.module.ModuleType;
+import fr.robotv2.robotcore.shared.StringUtil;
+import fr.robotv2.robotcore.shared.config.Config;
+import fr.robotv2.robotcore.shared.config.ConfigAPI;
+import fr.robotv2.robotcore.shared.module.Module;
+import fr.robotv2.robotcore.shared.module.ModuleType;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.lang.reflect.InvocationTargetException;

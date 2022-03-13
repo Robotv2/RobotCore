@@ -1,7 +1,6 @@
-package fr.robotv2.robotcore.api;
+package fr.robotv2.robotcore.shared;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;

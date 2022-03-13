@@ -23,7 +23,8 @@ public class MatUtil {
 
     public static boolean isFullyGrown(Block block) {
         BlockData data = block.getBlockData();
-        if (isCrops(block.getType()) && data instanceof Ageable age) {
+
+        if (data instanceof Ageable age) {
             return age.getAge() == age.getMaximumAge();
         } else {
             return false;

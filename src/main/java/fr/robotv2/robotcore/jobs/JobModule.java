@@ -1,9 +1,10 @@
 package fr.robotv2.robotcore.jobs;
 
-import fr.robotv2.robotcore.api.MessageAPI;
-import fr.robotv2.robotcore.api.StringUtil;
-import fr.robotv2.robotcore.api.config.ConfigAPI;
-import fr.robotv2.robotcore.api.module.Module;
+import fr.robotv2.robotcore.jobs.impl.job.JobId;
+import fr.robotv2.robotcore.shared.MessageAPI;
+import fr.robotv2.robotcore.shared.StringUtil;
+import fr.robotv2.robotcore.shared.config.ConfigAPI;
+import fr.robotv2.robotcore.shared.module.Module;
 import fr.robotv2.robotcore.core.RobotCore;
 import fr.robotv2.robotcore.jobs.command.JobsCommand;
 import fr.robotv2.robotcore.jobs.data.DataHandler;
@@ -84,6 +85,13 @@ public class JobModule implements Module {
         //Reload jobs.
         this.jobs.clear();
         this.loadJobsFromDir();
+
+        //Reset needed exp.
+        for(JobId id : getJobsId()) {
+            for(LevelManager.JobLevelPlayerData data : getLevelManager().getDatas()) {
+                data.resetNeededExp(id);
+            }
+        }
     }
 
     private void loadJobsFromDir() {
@@ -120,8 +128,8 @@ public class JobModule implements Module {
         return jobs.values();
     }
 
-    public Set<String> getJobsId() {
-        return getJobs().stream().map(job -> job.getJobId().getId())
+    public Set<JobId> getJobsId() {
+        return getJobs().stream().map(Job::getJobId)
                 .collect(Collectors.toSet());
     }
 
@@ -194,6 +202,7 @@ public class JobModule implements Module {
         } catch (Exception exception) {
             StringUtil.log("&cAn error occurred while trying to load the job for the file: " + file.getName());
             StringUtil.log("&cError message: " + exception.getMessage());
+            exception.printStackTrace();
         }
     }
 
@@ -213,7 +222,7 @@ public class JobModule implements Module {
             return getJob(c.getFirstArg());
         });
         RobotCore.getInstance().getCommandManager().getCommandCompletions().registerCompletion("jobs", c -> {
-            return getJobsId();
+            return getJobsId().stream().map(JobId::getId).collect(Collectors.toList());
         });
         RobotCore.getInstance().getCommandManager().registerCommand(new JobsCommand(this));
     }

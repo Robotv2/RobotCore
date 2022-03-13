@@ -1,7 +1,7 @@
 package fr.robotv2.robotcore.jobs.data.stock;
 
-import fr.robotv2.robotcore.api.config.Config;
-import fr.robotv2.robotcore.api.config.ConfigAPI;
+import fr.robotv2.robotcore.shared.config.Config;
+import fr.robotv2.robotcore.shared.config.ConfigAPI;
 import fr.robotv2.robotcore.jobs.JobModule;
 import fr.robotv2.robotcore.jobs.data.JobData;
 import fr.robotv2.robotcore.jobs.impl.job.Job;

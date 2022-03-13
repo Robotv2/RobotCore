@@ -1,4 +1,4 @@
-package fr.robotv2.robotcore.api;
+package fr.robotv2.robotcore.shared;
 
 import fr.robotv2.robotcore.core.RobotCore;
 import org.bukkit.Bukkit;

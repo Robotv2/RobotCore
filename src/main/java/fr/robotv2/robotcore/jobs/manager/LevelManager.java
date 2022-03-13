@@ -1,12 +1,14 @@
 package fr.robotv2.robotcore.jobs.manager;
 
-import fr.robotv2.robotcore.api.StringUtil;
+import fr.robotv2.robotcore.shared.StringUtil;
 import fr.robotv2.robotcore.jobs.JobModule;
 import fr.robotv2.robotcore.jobs.data.JobData;
 import fr.robotv2.robotcore.jobs.impl.job.Job;
 import fr.robotv2.robotcore.jobs.impl.job.JobId;
+import net.objecthunter.exp4j.Expression;
 import org.bukkit.entity.Player;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -23,9 +25,10 @@ public class LevelManager {
     public static class JobLevelPlayerData {
         private final Map<JobId, Integer> levels = new HashMap<>();
         private final Map<JobId, Double> experiences = new HashMap<>();
+        private final Map<JobId, Double> neededExp = new HashMap<>();
 
         public int getLevel(JobId id) {
-            return levels.getOrDefault(id, 0);
+            return levels.getOrDefault(id, 1);
         }
 
         public double getExperiences(JobId id) {
@@ -38,6 +41,22 @@ public class LevelManager {
 
         public void setExperiences(JobId id, Double value) {
             this.experiences.put(id, value);
+        }
+
+        public double getNeededExp(Job job) {
+            JobId id = job.getJobId();
+            if(neededExp.containsKey(id)) {
+                return neededExp.get(id);
+            } else {
+                int level = this.getLevel(id);
+                Expression expression = job.getExpression().setVariable("level", level);
+                neededExp.put(id, expression.evaluate());
+                return getNeededExp(job);
+            }
+        }
+
+        public void resetNeededExp(JobId id) {
+            neededExp.remove(id);
         }
     }
 
@@ -60,6 +79,10 @@ public class LevelManager {
             StringUtil.log("Error's message: " + exception.getMessage());
             return false;
         }
+    }
+
+    public Collection<JobLevelPlayerData> getDatas() {
+        return levelDatas.values();
     }
 
     public JobLevelPlayerData getLevelPlayerData(UUID playerUUID) {
@@ -92,8 +115,7 @@ public class LevelManager {
     }
 
     public Double getExpNeeded(Player player, Job job) {
-        int level = this.getLevel(player, job);
-        return (level * 30.5D) * (level * level);
+        return getLevelPlayerData(player).getNeededExp(job);
     }
 
     public boolean canLevelUp(Player player, Job job) {
@@ -105,6 +127,7 @@ public class LevelManager {
 
         this.setExp(player, job, 0D);
         this.setLevel(player, job, getLevel(player, job) + 1);
+        this.getLevelPlayerData(player).resetNeededExp(job.getJobId());
 
         StringUtil.sendMessage(
                 player,
