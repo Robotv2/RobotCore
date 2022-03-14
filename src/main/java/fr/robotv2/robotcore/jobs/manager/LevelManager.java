@@ -2,6 +2,7 @@ package fr.robotv2.robotcore.jobs.manager;
 
 import fr.robotv2.robotcore.jobs.JobModule;
 import fr.robotv2.robotcore.jobs.data.JobData;
+import fr.robotv2.robotcore.jobs.events.PlayerJobLevelUpEvent;
 import fr.robotv2.robotcore.jobs.impl.job.Job;
 import fr.robotv2.robotcore.jobs.impl.job.JobId;
 import fr.robotv2.robotcore.shared.StringUtil;
@@ -135,9 +136,7 @@ public class LevelManager {
         this.setLevel(player, job, getLevel(player, job) + 1);
         this.getLevelPlayerData(player).resetNeededExp(job.getJobId());
 
-        StringUtil.sendMessage(
-                player,
-                "&7You have just passed level &f" + getLevel(player, job) + " &7for the job " + job.getName() + " &7!",
-                true);
+        jobModule.getPlugin().getServer().getPluginManager().callEvent(new PlayerJobLevelUpEvent(player, job));
+        StringUtil.sendMessage(player, "&7You have just passed level &f" + getLevel(player, job) + " &7for the job " + job.getName() + " &7!", true);
     }
 }

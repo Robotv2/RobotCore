@@ -5,6 +5,8 @@ import fr.robotv2.robotcore.jobs.impl.job.JobAction;
 import fr.robotv2.robotcore.shared.item.HeadUtil;
 import fr.robotv2.robotcore.shared.item.ItemAPI;
 import fr.robotv2.robotcore.shared.ui.GUI;
+import net.md_5.bungee.api.chat.TranslatableComponent;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
@@ -73,14 +75,17 @@ public class JobInfoUI implements GUI {
 
     public ItemStack getKeyItem(String value, JobAction action, double money, double exp) {
         value = value.toUpperCase();
+        String key = null;
         ItemStack item = null;
 
         try {
             EntityType entityType = EntityType.valueOf(value);
+            key = entityType.translationKey();
             item = HeadUtil.getHead(entityType);
         } catch (IllegalArgumentException exception) {
             try {
                 Material material = Material.valueOf(value);
+                key = material.translationKey();
                 item = new ItemStack(material);
             } catch (IllegalArgumentException ignored) {
             }
@@ -90,6 +95,17 @@ public class JobInfoUI implements GUI {
             return null;
 
         ItemAPI.ItemBuilder builder = ItemAPI.toBuilder(item);
-        return builder.setLore("&cAction: " + action.getTranslation(), "&eMoney: " + money + "$", "&eExp: " + exp).build();
+        return builder.setName("&8» &e" + this.getNameFromKey(key))
+                .setLore(
+                        "&8&m&l-----------",
+                        "&eAction &8- &f" + action.getTranslation(),
+                        "&eMoney &8- &f" + money + "$",
+                        "&eExp &8- &f" + exp,
+                        "&8&m&l-----------").build();
+    }
+
+    private String getNameFromKey(String key) {
+        String translation = new TranslatableComponent(key).getTranslate();
+        return translation.substring(0, 1).toUpperCase() + translation.substring(1);
     }
 }

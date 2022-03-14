@@ -16,4 +16,8 @@ gui:
       - 0:9:WHITE_STAINED_GLASS_PANE
       - 10:16:LIGHT_BLUE_STAINED_GLASS_PANE
       - 17:26:WHITE_STAINED_GLASS_PANE
+  info-gui:
+    name: "&8» &7Info %job%"
+    item:
+      name: ""
 
