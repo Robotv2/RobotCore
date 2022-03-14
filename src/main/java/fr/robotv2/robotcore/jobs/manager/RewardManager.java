@@ -2,7 +2,6 @@ package fr.robotv2.robotcore.jobs.manager;
 
 import fr.robotv2.robotcore.jobs.impl.Currency;
 import fr.robotv2.robotcore.jobs.impl.job.JobAction;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.HashMap;

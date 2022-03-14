@@ -1,10 +1,10 @@
 package fr.robotv2.robotcore.jobs.impl.job;
 
-import fr.robotv2.robotcore.shared.StringUtil;
-import fr.robotv2.robotcore.shared.dependencies.VaultAPI;
 import fr.robotv2.robotcore.jobs.JobModule;
 import fr.robotv2.robotcore.jobs.impl.Currency;
 import fr.robotv2.robotcore.jobs.manager.RewardManager;
+import fr.robotv2.robotcore.shared.StringUtil;
+import fr.robotv2.robotcore.shared.dependencies.VaultAPI;
 import fr.robotv2.robotcore.shared.item.ItemAPI;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
@@ -15,6 +15,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Collections;
@@ -62,7 +63,7 @@ public class Job {
         //Gui
         this.slot = configuration.getInt("gui.slot");
         Material material = Material.valueOf(configuration.getString("gui.material", "STONE").toUpperCase());
-        this.item = new ItemAPI.ItemBuilder().setType(material).setName(configuration.getString("gui.name", this.name)).build();
+        this.item = new ItemAPI.ItemBuilder().setType(material).setName(configuration.getString("gui.name", this.name)).addFlags(ItemFlag.HIDE_ATTRIBUTES).build();
 
         this.rewardManager = new RewardManager(configuration);
         this.jobModule = jobModule;
@@ -102,12 +103,12 @@ public class Job {
         List<String> lore = configuration.getStringList("gui.lore");
 
         int level = jobModule.getLevelManager().getLevel(player, this);
-        double exp = jobModule.getLevelManager().getExp(player, this);
+        String exp = jobModule.getLevelManager().getFormattedExp(player, this);
 
         lore = lore.stream()
                 .map(StringUtil::colorize)
                 .map(line -> line.replace("%level%", String.valueOf(level)))
-                .map(line -> line.replace("%exp%", String.valueOf(exp)))
+                .map(line -> line.replace("%exp%", exp))
                 .collect(Collectors.toList());
         return builder.setLore(lore).setKey("job", id.getId()).build();
     }

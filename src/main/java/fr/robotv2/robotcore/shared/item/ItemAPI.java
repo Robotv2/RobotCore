@@ -2,18 +2,18 @@ package fr.robotv2.robotcore.shared.item;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
+import fr.robotv2.robotcore.core.RobotCore;
 import fr.robotv2.robotcore.shared.OfflineAPI;
 import fr.robotv2.robotcore.shared.StringUtil;
-import fr.robotv2.robotcore.core.RobotCore;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.lang.reflect.Field;

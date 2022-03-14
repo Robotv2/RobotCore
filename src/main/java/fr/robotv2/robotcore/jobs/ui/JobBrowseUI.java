@@ -11,31 +11,45 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 
 public class JobBrowseUI implements GUI {
 
     private final JobModule jobModule;
-    private ItemStack empty;
     public JobBrowseUI(JobModule jobModule) {
         this.jobModule = jobModule;
     }
 
     @Override
     public String getName(Player player, Object... objects) {
-        return "&7Your jobs";
+        return jobModule.getConfig().getString("gui.browse-gui.name");
     }
 
     @Override
     public int getSize() {
-        return 9;
+        return jobModule.getConfig().getInt("gui.browse-gui.row") * 9;
     }
 
     @Override
     public void contents(Player player, Inventory inv, Object... objects) {
-        for(int i = 0; i <= 8; i++) inv.setItem(i, getEmpty());
-        for(Job job : jobModule.getPlayerManager().getJobs(player)) {
+        for(String deco : jobModule.getConfig().getStringList("gui.browse-gui.decorations")) {
+            String[] args = deco.split(":");
+            if(args.length == 2) {
+                inv.setItem(Integer.parseInt(args[0]), this.getDeco(Material.valueOf(args[1].toUpperCase())));
+            } else if(args.length == 3) {
+                int from = Integer.parseInt(args[0]);
+                int to = Integer.parseInt(args[1]);
+                Material material = Material.valueOf(args[2]);
+                for(int i = from; i <= to; i++) {
+                    System.out.println(i + " " + material);
+                    inv.setItem(i, getDeco(material));
+                }
+            }
+        }
+
+        for(Job job : jobModule.getJobs()) {
             inv.setItem(job.getSlot(), job.getItem(player));
         }
     }
@@ -67,9 +81,7 @@ public class JobBrowseUI implements GUI {
 
     }
 
-    public ItemStack getEmpty() {
-        if(this.empty == null)
-            this.empty = new ItemAPI.ItemBuilder().setType(Material.GRAY_STAINED_GLASS_PANE).setName("&8").build();
-        return this.empty;
+    public ItemStack getDeco(Material material) {
+        return new ItemAPI.ItemBuilder().setType(material).setName("&8").addFlags(ItemFlag.HIDE_ATTRIBUTES).build();
     }
 }

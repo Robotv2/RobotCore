@@ -2,9 +2,11 @@ package fr.robotv2.robotcore.jobs.command;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
-import fr.robotv2.robotcore.shared.StringUtil;
 import fr.robotv2.robotcore.jobs.JobModule;
 import fr.robotv2.robotcore.jobs.impl.job.Job;
+import fr.robotv2.robotcore.jobs.ui.JobBrowseUI;
+import fr.robotv2.robotcore.shared.StringUtil;
+import fr.robotv2.robotcore.shared.ui.GuiAPI;
 import org.bukkit.entity.Player;
 
 @CommandAlias("job|jobs")
@@ -89,5 +91,11 @@ public class JobsCommand extends BaseCommand {
     public void onReload(Player player) {
         module.onReload();
         StringUtil.sendMessage(player, "&aThe job module has been reloaded successfully.", true);
+    }
+
+    @Subcommand("browse")
+    @CommandPermission("robotcore.job.command.browse")
+    public void onBrowse(Player player) {
+        GuiAPI.open(player, JobBrowseUI.class);
     }
 }

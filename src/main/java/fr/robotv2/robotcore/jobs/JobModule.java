@@ -1,36 +1,36 @@
 package fr.robotv2.robotcore.jobs;
 
-import fr.robotv2.robotcore.jobs.impl.job.JobId;
-import fr.robotv2.robotcore.jobs.ui.JobBrowseUI;
-import fr.robotv2.robotcore.jobs.ui.JobInfoUI;
-import fr.robotv2.robotcore.shared.MessageAPI;
-import fr.robotv2.robotcore.shared.StringUtil;
-import fr.robotv2.robotcore.shared.config.ConfigAPI;
-import fr.robotv2.robotcore.shared.module.Module;
 import fr.robotv2.robotcore.core.RobotCore;
 import fr.robotv2.robotcore.jobs.command.JobsCommand;
 import fr.robotv2.robotcore.jobs.data.DataHandler;
 import fr.robotv2.robotcore.jobs.events.EventCaller;
 import fr.robotv2.robotcore.jobs.impl.job.Job;
+import fr.robotv2.robotcore.jobs.impl.job.JobId;
 import fr.robotv2.robotcore.jobs.listeners.PlayerEvents;
 import fr.robotv2.robotcore.jobs.listeners.SystemEvents;
 import fr.robotv2.robotcore.jobs.manager.BlockManager;
 import fr.robotv2.robotcore.jobs.manager.BonusManager;
 import fr.robotv2.robotcore.jobs.manager.LevelManager;
 import fr.robotv2.robotcore.jobs.manager.PlayerManager;
+import fr.robotv2.robotcore.jobs.ui.JobBrowseUI;
+import fr.robotv2.robotcore.jobs.ui.JobInfoUI;
 import fr.robotv2.robotcore.jobs.util.ActionBarJob;
 import fr.robotv2.robotcore.jobs.util.BossBarJob;
-import fr.robotv2.robotcore.shared.ui.GUI;
+import fr.robotv2.robotcore.shared.MessageAPI;
+import fr.robotv2.robotcore.shared.StringUtil;
+import fr.robotv2.robotcore.shared.config.ConfigAPI;
+import fr.robotv2.robotcore.shared.module.Module;
 import fr.robotv2.robotcore.shared.ui.GuiAPI;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.Nullable;
 
-import javax.script.ScriptEngineManager;
 import java.io.File;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -87,6 +87,7 @@ public class JobModule implements Module {
     public void onReload() {
         this.jobMessage.clearPaths();
         this.jobMessage.getFile().reload();
+        this.reloadConfig();
 
         //Reload jobs.
         this.jobs.clear();

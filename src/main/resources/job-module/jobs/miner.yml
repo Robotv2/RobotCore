@@ -7,7 +7,7 @@ leveling-system:
   exp-needed: (level * 30.5) * (level * level)
 
 gui:
-  slot: 3
+  slot: 12
   material: STONE_PICKAXE
   name: "&c&lMiner &7job"
   lore:

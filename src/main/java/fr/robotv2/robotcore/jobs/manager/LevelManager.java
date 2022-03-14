@@ -1,13 +1,14 @@
 package fr.robotv2.robotcore.jobs.manager;
 
-import fr.robotv2.robotcore.shared.StringUtil;
 import fr.robotv2.robotcore.jobs.JobModule;
 import fr.robotv2.robotcore.jobs.data.JobData;
 import fr.robotv2.robotcore.jobs.impl.job.Job;
 import fr.robotv2.robotcore.jobs.impl.job.JobId;
+import fr.robotv2.robotcore.shared.StringUtil;
 import net.objecthunter.exp4j.Expression;
 import org.bukkit.entity.Player;
 
+import java.text.DecimalFormat;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,6 +16,7 @@ import java.util.UUID;
 
 public class LevelManager {
 
+    private final DecimalFormat format = new DecimalFormat("####.##");
     private final JobModule jobModule;
     private final Map<UUID, JobLevelPlayerData> levelDatas = new HashMap<>();
 
@@ -103,6 +105,10 @@ public class LevelManager {
 
     public Double getExp(Player player, Job type) {
         return getLevelPlayerData(player).getExperiences(type.getJobId());
+    }
+
+    public String getFormattedExp(Player player, Job type) {
+        return format.format(getExp(player, type));
     }
 
     public void setExp(Player player, Job job, Double exp) {

@@ -1,11 +1,11 @@
 package fr.robotv2.robotcore.jobs.data.stock;
 
-import fr.robotv2.robotcore.shared.config.Config;
-import fr.robotv2.robotcore.shared.config.ConfigAPI;
 import fr.robotv2.robotcore.jobs.JobModule;
 import fr.robotv2.robotcore.jobs.data.JobData;
 import fr.robotv2.robotcore.jobs.impl.job.Job;
 import fr.robotv2.robotcore.jobs.impl.job.JobId;
+import fr.robotv2.robotcore.shared.config.Config;
+import fr.robotv2.robotcore.shared.config.ConfigAPI;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.io.File;

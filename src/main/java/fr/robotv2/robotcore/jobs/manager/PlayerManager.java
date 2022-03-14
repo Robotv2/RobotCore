@@ -1,11 +1,11 @@
 package fr.robotv2.robotcore.jobs.manager;
 
-import fr.robotv2.robotcore.shared.StringUtil;
-import fr.robotv2.robotcore.shared.TaskUtil;
 import fr.robotv2.robotcore.jobs.JobModule;
 import fr.robotv2.robotcore.jobs.data.JobData;
 import fr.robotv2.robotcore.jobs.impl.job.Job;
 import fr.robotv2.robotcore.jobs.impl.job.JobId;
+import fr.robotv2.robotcore.shared.StringUtil;
+import fr.robotv2.robotcore.shared.TaskUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 

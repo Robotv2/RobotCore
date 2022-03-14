@@ -7,3 +7,13 @@ storage:
     username: my-username
     password: my-password
     use-ssl: true
+
+gui:
+  browse-gui:
+    name: "&8» &7Browse"
+    row: 3
+    decorations:
+      - 0:9:WHITE_STAINED_GLASS_PANE
+      - 10:16:LIGHT_BLUE_STAINED_GLASS_PANE
+      - 17:26:WHITE_STAINED_GLASS_PANE
+

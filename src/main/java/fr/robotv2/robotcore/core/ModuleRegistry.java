@@ -49,7 +49,7 @@ public class ModuleRegistry {
 
     public <T extends Module> T getModule(Class<T> clazz, ModuleType type) {
         this.checkModule(type);
-        return clazz.cast(type.getModuleClass());
+        return clazz.cast(modules.get(type));
     }
 
     /**

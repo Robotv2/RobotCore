@@ -14,6 +14,7 @@ public class DependencyManager {
         DependencyManager.registerConfigAPI();
         DependencyManager.registerVault();
         DependencyManager.registerAcf();
+        DependencyManager.registerUI();
     }
 
     private static void registerVault() {

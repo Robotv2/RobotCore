@@ -1,7 +1,7 @@
 package fr.robotv2.robotcore.jobs.util;
 
-import fr.robotv2.robotcore.shared.StringUtil;
 import fr.robotv2.robotcore.jobs.impl.job.Job;
+import fr.robotv2.robotcore.shared.StringUtil;
 import org.bukkit.entity.Player;
 
 import java.text.DecimalFormat;

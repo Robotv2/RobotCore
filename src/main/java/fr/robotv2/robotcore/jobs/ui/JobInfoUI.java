@@ -8,17 +8,12 @@ import fr.robotv2.robotcore.shared.ui.GUI;
 import org.bukkit.Material;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.Iterator;
-import java.util.Spliterator;
 
 public class JobInfoUI implements GUI {
 
@@ -37,7 +32,8 @@ public class JobInfoUI implements GUI {
 
     @Override
     public void contents(Player player, Inventory inv, Object... objects) {
-        for(int i = 0; i <= 53; i++) inv.setItem(i, getEmpty());
+        for(int i = 0; i < getSize(); i++)
+            inv.setItem(i, getEmpty());
 
         Job job = (Job) objects[0];
         Configuration configuration = job.getConfigurationFile();
@@ -80,12 +76,12 @@ public class JobInfoUI implements GUI {
         ItemStack item = null;
 
         try {
-            Material material = Material.valueOf(value);
-            item = new ItemStack(material);
+            EntityType entityType = EntityType.valueOf(value);
+            item = HeadUtil.getHead(entityType);
         } catch (IllegalArgumentException exception) {
             try {
-                EntityType entityType = EntityType.valueOf(value);
-                item = HeadUtil.getHead(entityType);
+                Material material = Material.valueOf(value);
+                item = new ItemStack(material);
             } catch (IllegalArgumentException ignored) {
             }
         }
