@@ -43,7 +43,6 @@ public class JobBrowseUI implements GUI {
                 int to = Integer.parseInt(args[1]);
                 Material material = Material.valueOf(args[2]);
                 for(int i = from; i <= to; i++) {
-                    System.out.println(i + " " + material);
                     inv.setItem(i, getDeco(material));
                 }
             }

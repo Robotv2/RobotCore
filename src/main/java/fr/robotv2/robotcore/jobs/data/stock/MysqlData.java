@@ -5,6 +5,7 @@ import fr.robotv2.robotcore.jobs.JobModule;
 import fr.robotv2.robotcore.jobs.data.JobData;
 import fr.robotv2.robotcore.jobs.impl.job.Job;
 import fr.robotv2.robotcore.jobs.impl.job.JobId;
+import fr.robotv2.robotcore.shared.OfflineAPI;
 import org.bukkit.Bukkit;
 
 import java.sql.Connection;
@@ -223,7 +224,7 @@ public class MysqlData implements JobData {
                 try(Connection connection = getConnection()) {
                     PreparedStatement statement = connection.prepareStatement("INSERT INTO " + TABLE_PLAYER_DATA + " VALUES (?, ?, ?, ?, ?, ?)");
                     statement.setString(1, playerUUID.toString());
-                    statement.setString(2, Bukkit.getOfflinePlayer(playerUUID).getName());
+                    statement.setString(2, OfflineAPI.getName(playerUUID));
                     statement.setString(3, job.getJobId().toString());
                     statement.setInt(4, 0);
                     statement.setDouble(5, 0D);

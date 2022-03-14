@@ -24,16 +24,29 @@ gui:
 
 actions:
   BREAK:
+    EMERALD_ORE:
+      money: 100
+      exp: 40
     DIAMOND_ORE:
-      money: 10
-      exp: 10
+      money: 50
+      exp: 20
     GOLD_ORE:
-      money: 5
-      exp: 5
+      money: 40
+      exp: 10
+    IRON_ORE:
+      money: 7,5
+      exp: 2,5
     COAL_ORE:
       money: 2
-      exp: 2
+      exp: 1
     STONE:
-      money: 0.01
-      exp: 0.01
+      money: 0.1
+      exp: 0.075
+  KILL:
+    ZOMBIE:
+      money: 3
+      exp: 1,5
+    SKELETON:
+      money: 4
+      exp: 2
 
