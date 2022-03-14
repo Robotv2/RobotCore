@@ -1,6 +1,8 @@
 package fr.robotv2.robotcore.jobs;
 
 import fr.robotv2.robotcore.jobs.impl.job.JobId;
+import fr.robotv2.robotcore.jobs.ui.JobBrowseUI;
+import fr.robotv2.robotcore.jobs.ui.JobInfoUI;
 import fr.robotv2.robotcore.shared.MessageAPI;
 import fr.robotv2.robotcore.shared.StringUtil;
 import fr.robotv2.robotcore.shared.config.ConfigAPI;
@@ -18,12 +20,15 @@ import fr.robotv2.robotcore.jobs.manager.LevelManager;
 import fr.robotv2.robotcore.jobs.manager.PlayerManager;
 import fr.robotv2.robotcore.jobs.util.ActionBarJob;
 import fr.robotv2.robotcore.jobs.util.BossBarJob;
+import fr.robotv2.robotcore.shared.ui.GUI;
+import fr.robotv2.robotcore.shared.ui.GuiAPI;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
 
+import javax.script.ScriptEngineManager;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -71,6 +76,7 @@ public class JobModule implements Module {
         loadJobsFromDir();
         registerListener();
         registerCommand();
+        registerUI();
     }
 
     @Override
@@ -119,7 +125,6 @@ public class JobModule implements Module {
         return getJob(id) != null || getJobsId().contains(id);
     }
 
-    @Nullable
     public Job getJob(String id) {
         return jobs.get(id);
     }
@@ -208,7 +213,6 @@ public class JobModule implements Module {
 
     private void registerDefaultJobs() {
         ConfigAPI.getConfig("job-module" + File.separator + "jobs" + File.separator + "miner").setup();
-        ConfigAPI.getConfig("job-module" + File.separator + "jobs" + File.separator + "lumberjack").setup();
     }
 
     private void registerListener() {
@@ -225,5 +229,10 @@ public class JobModule implements Module {
             return getJobsId().stream().map(JobId::getId).collect(Collectors.toList());
         });
         RobotCore.getInstance().getCommandManager().registerCommand(new JobsCommand(this));
+    }
+
+    private void registerUI() {
+        GuiAPI.addMenu(new JobBrowseUI(this));
+        GuiAPI.addMenu(new JobInfoUI());
     }
 }

@@ -13,6 +13,7 @@ public class MessageAPI {
 
     public MessageAPI(Config config) {
         this.config = config;
+        this.config.setup();
     }
 
     public Config getFile() {

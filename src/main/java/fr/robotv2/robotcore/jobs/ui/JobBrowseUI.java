@@ -4,6 +4,8 @@ import fr.robotv2.robotcore.jobs.JobModule;
 import fr.robotv2.robotcore.jobs.impl.job.Job;
 import fr.robotv2.robotcore.shared.item.ItemAPI;
 import fr.robotv2.robotcore.shared.ui.GUI;
+import fr.robotv2.robotcore.shared.ui.GuiAPI;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -43,10 +45,18 @@ public class JobBrowseUI implements GUI {
         if(ItemAPI.hasKey(current, "job", PersistentDataType.STRING)) {
             String id = (String) ItemAPI.getKeyValue(current, "job", PersistentDataType.STRING);
             Job job = jobModule.getJob(id);
-
             switch (click) {
+                case RIGHT -> {
+                    Bukkit.dispatchCommand(player, "jobs leave " + id);
+                    player.closeInventory();
+                }
                 case LEFT -> {
-
+                    Bukkit.dispatchCommand(player, "jobs join " + id);
+                    player.closeInventory();
+                }
+                case MIDDLE -> {
+                    GuiAPI.open(player, JobInfoUI.class, job);
+                    player.closeInventory();
                 }
             }
         }

@@ -55,15 +55,15 @@ public class GuiAPI implements Listener {
         menus.put(gui.getClass(), gui);
     }
 
-    public static void open(Player player, Class<? extends GUI> gClass){
+    public static void open(Player player, Class<? extends GUI> gClass, Object... objects){
         if(!menus.containsKey(gClass)) {
             RobotCore.getInstance().getLogger().warning(colorize("&cVous devez enregistrer l'inventaire avant de pouvoir l'ouvrir"));
             return;
         }
 
         GUI menu = menus.get(gClass);
-        Inventory inv = Bukkit.createInventory(null, menu.getSize(), colorize(menu.getName(player)));
-        menu.contents(player, inv);
+        Inventory inv = Bukkit.createInventory(null, menu.getSize(), colorize(menu.getName(player, objects)));
+        menu.contents(player, inv, objects);
         players.put(player.getUniqueId(), menu);
 
         Bukkit.getScheduler().runTaskLater(RobotCore.getInstance(), () -> {

@@ -8,3 +8,11 @@ dont-has-job: "&cYou don't have this job."
 #SUCCESS
 job-join: "&fYou have just joined the job: &e%job%"
 job-leave: "&fYou have just left the job of: &e%job%"
+
+#JOB-ACTIONS
+BREAK: "Break blocks"
+PLACE: "Place blocks"
+KILL: "Kill entity or player"
+HARVEST_PLANT: "Plant crops"
+HARVEST_BREAK: "Break fully grown crops"
+FISHING: "Fish fish"

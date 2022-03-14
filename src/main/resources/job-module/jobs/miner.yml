@@ -17,6 +17,10 @@ gui:
     - "&eStats:"
     - " &7Level: &e%level%"
     - " &7exp: &e%exp%"
+    - ""
+    - "&aLeft-click to join"
+    - "&cRight-click to leave"
+    - "&bMiddle-click to get more info"
 
 actions:
   BREAK:
