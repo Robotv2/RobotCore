@@ -20,7 +20,7 @@ gui:
     - ""
     - "&aLeft-click to join"
     - "&cRight-click to leave"
-    - "&bMiddle-click to get more info"
+    - "&bShift-right-click to get more info"
 
 actions:
   BREAK:

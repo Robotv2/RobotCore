@@ -67,7 +67,7 @@ public class JobBrowseUI implements GUI {
                     Bukkit.dispatchCommand(player, "jobs join " + id);
                     player.closeInventory();
                 }
-                case MIDDLE -> {
+                case SHIFT_RIGHT -> {
                     GuiAPI.open(player, JobInfoUI.class, job);
                     player.closeInventory();
                 }

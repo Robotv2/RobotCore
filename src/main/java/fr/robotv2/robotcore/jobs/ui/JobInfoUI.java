@@ -6,7 +6,6 @@ import fr.robotv2.robotcore.shared.item.HeadUtil;
 import fr.robotv2.robotcore.shared.item.ItemAPI;
 import fr.robotv2.robotcore.shared.ui.GUI;
 import net.md_5.bungee.api.chat.TranslatableComponent;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
@@ -105,7 +104,7 @@ public class JobInfoUI implements GUI {
     }
 
     private String getNameFromKey(String key) {
-        String translation = new TranslatableComponent(key).getTranslate();
+        String translation = new TranslatableComponent(key).toLegacyText();
         return translation.substring(0, 1).toUpperCase() + translation.substring(1);
     }
 }

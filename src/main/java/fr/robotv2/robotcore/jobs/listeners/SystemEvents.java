@@ -6,6 +6,7 @@ import fr.robotv2.robotcore.jobs.events.HarvestBreakEvent;
 import fr.robotv2.robotcore.jobs.events.HarvestPlaceEvent;
 import fr.robotv2.robotcore.jobs.impl.job.JobAction;
 import fr.robotv2.robotcore.jobs.util.MatUtil;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -83,6 +84,8 @@ public record SystemEvents(JobModule jobModule) implements Listener {
     @EventHandler
     public void onBreakOfBlocks(BlockBreakEvent event) {
         if(jobModule.getBlockManager().hasBeenPlaced(event.getBlock()))
+            return;
+        if(event.getPlayer().getGameMode() == GameMode.CREATIVE)
             return;
         jobModule.getCaller().call(JobAction.BREAK, event);
     }

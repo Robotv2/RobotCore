@@ -13,25 +13,24 @@ import org.bukkit.event.player.PlayerQuitEvent;
 public record PlayerEvents(JobModule jobModule) implements Listener {
 
     private void loadPlayer(Player player) {
-        JobData jobData = jobModule.getDataHandler().getData();
-        TaskUtil.runTask(() -> {
-            if(!jobModule.getPlayerManager().initializePlayer(player)) {
-                player.kickPlayer(StringUtil.colorize("&cAn error occurred while restoring your jobs from the database."));
-                return;
-            }
+        if(!jobModule.getPlayerManager().initializePlayer(player)) {
+            player.kickPlayer(StringUtil.colorize("&cAn error occurred while restoring your jobs from the database."));
+            return;
+        }
 
-            if(!jobModule.getLevelManager().initializePlayer(player)) {
-                player.kickPlayer(StringUtil.colorize("&cAn error occurred while restoring your levels from the database."));
-                return;
-            }
+        if(!jobModule.getLevelManager().initializePlayer(player)) {
+            player.kickPlayer(StringUtil.colorize("&cAn error occurred while restoring your levels from the database."));
+            return;
+        }
 
-            StringUtil.log("&fAll the data from the player &e" + player.getName() + " &fhas been restored successfully.");
-        }, jobData.needAsync());
+        StringUtil.log("&fAll the data from the player &e" + player.getName() + " &fhas been restored successfully.");
     }
 
     @EventHandler
     public void dataInitializer(PlayerJoinEvent event) {
-        this.loadPlayer(event.getPlayer());
+        TaskUtil.runTask(() -> {
+            this.loadPlayer(event.getPlayer());
+        }, jobModule.getDataHandler().getData().needAsync());
         jobModule.getPlayerManager().initScheduledSaving(event.getPlayer());
     }
 
