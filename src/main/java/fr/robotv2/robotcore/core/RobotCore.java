@@ -4,16 +4,20 @@ import co.aikar.commands.PaperCommandManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.logging.Logger;
+
 public final class RobotCore extends JavaPlugin {
 
     private static boolean stop = false;
     private static RobotCore instance;
+    private static Logger logger;
 
     private ModuleRegistry registry;
 
     @Override
     public void onEnable() {
         this.setInstance(this);
+
 
         DependencyManager.loadDependencies();
         if(stop) return;
@@ -29,33 +33,29 @@ public final class RobotCore extends JavaPlugin {
         this.setInstance(null);
     }
 
-    /**
-     * @return an instance of the core.
-     */
+    public void disablePlugin() {
+        stop = true;
+        getServer().getPluginManager().disablePlugin(this);
+    }
+
     public static RobotCore getInstance() {
         return instance;
+    }
+
+    public static Logger getLog() {
+        return logger;
     }
 
     public void setInstance(@Nullable RobotCore core) {
         RobotCore.instance = core;
     }
 
-    /**
-     * @return the instance of the module registry.
-     */
+
     public ModuleRegistry getModuleRegistry() {
         return registry;
     }
 
-    /**
-     * @return the instance of the ACF command manager.
-     */
     public PaperCommandManager getCommandManager() {
         return DependencyManager.getCommandManager();
-    }
-
-    public void disablePlugin() {
-        stop = true;
-        getServer().getPluginManager().disablePlugin(this);
     }
 }

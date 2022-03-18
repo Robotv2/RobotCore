@@ -1,8 +1,9 @@
 package fr.robotv2.robotcore.jobs;
 
 import fr.robotv2.robotcore.core.RobotCore;
+import fr.robotv2.robotcore.core.module.Module;
 import fr.robotv2.robotcore.jobs.command.JobsCommand;
-import fr.robotv2.robotcore.jobs.data.DataHandler;
+import fr.robotv2.robotcore.jobs.data.JobDataHandler;
 import fr.robotv2.robotcore.jobs.events.EventCaller;
 import fr.robotv2.robotcore.jobs.impl.job.Job;
 import fr.robotv2.robotcore.jobs.impl.job.JobId;
@@ -19,7 +20,6 @@ import fr.robotv2.robotcore.jobs.util.BossBarJob;
 import fr.robotv2.robotcore.shared.MessageAPI;
 import fr.robotv2.robotcore.shared.StringUtil;
 import fr.robotv2.robotcore.shared.config.ConfigAPI;
-import fr.robotv2.robotcore.shared.module.Module;
 import fr.robotv2.robotcore.shared.ui.GuiAPI;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -47,7 +47,7 @@ public class JobModule implements Module {
     private LevelManager levelManager;
     private PlayerManager playerManager;
     private BonusManager bonusManager;
-    private DataHandler dataHandler;
+    private JobDataHandler jobDataHandler;
 
     private final Map<String, Job> jobs = new ConcurrentHashMap<>();
 
@@ -59,8 +59,8 @@ public class JobModule implements Module {
         this.plugin = plugin;
         this.PATH_TO_JOBS_DIRECT = plugin.getDataFolder() + File.separator + "job-module" + File.separator + "jobs";
 
-        this.dataHandler = new DataHandler();
-        this.dataHandler.initializeStorage(this, this.getConfig());
+        this.jobDataHandler = new JobDataHandler();
+        this.jobDataHandler.initializeStorage(this, this.getConfig());
 
         this.levelManager = new LevelManager(this);
         this.playerManager = new PlayerManager(this);
@@ -141,8 +141,8 @@ public class JobModule implements Module {
 
         //<-- CLASSES ->>
 
-    public DataHandler getDataHandler() {
-        return dataHandler;
+    public JobDataHandler getDataHandler() {
+        return jobDataHandler;
     }
 
     public EventCaller getCaller() {

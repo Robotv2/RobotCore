@@ -1,7 +1,6 @@
 package fr.robotv2.robotcore.jobs.listeners;
 
 import fr.robotv2.robotcore.jobs.JobModule;
-import fr.robotv2.robotcore.jobs.data.JobData;
 import fr.robotv2.robotcore.shared.StringUtil;
 import fr.robotv2.robotcore.shared.TaskUtil;
 import org.bukkit.entity.Player;

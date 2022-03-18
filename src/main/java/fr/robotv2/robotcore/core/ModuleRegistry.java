@@ -1,10 +1,10 @@
 package fr.robotv2.robotcore.core;
 
+import fr.robotv2.robotcore.core.module.Module;
+import fr.robotv2.robotcore.core.module.ModuleType;
 import fr.robotv2.robotcore.shared.StringUtil;
 import fr.robotv2.robotcore.shared.config.Config;
 import fr.robotv2.robotcore.shared.config.ConfigAPI;
-import fr.robotv2.robotcore.shared.module.Module;
-import fr.robotv2.robotcore.shared.module.ModuleType;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.lang.reflect.InvocationTargetException;
@@ -25,12 +25,15 @@ public class ModuleRegistry {
 
     public void registerModule(ModuleType type) {
         try {
+            StringUtil.log("&8&m&l-----------");
             Module module = type.getModuleClass().getDeclaredConstructor().newInstance();
             module.onEnable(core);
             modules.put(type, module);
             StringUtil.log("&aThe module " + type + " has been successfully registered and enabled.");
+            StringUtil.log("&8&m&l-----------");
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             StringUtil.log("&cAn error occurred while loading the module: " + type.name());
+            StringUtil.log("&cError's message: " + e.getMessage());
         }
     }
 

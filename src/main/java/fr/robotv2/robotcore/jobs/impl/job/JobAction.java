@@ -1,8 +1,8 @@
 package fr.robotv2.robotcore.jobs.impl.job;
 
 import fr.robotv2.robotcore.core.RobotCore;
+import fr.robotv2.robotcore.core.module.ModuleType;
 import fr.robotv2.robotcore.jobs.JobModule;
-import fr.robotv2.robotcore.shared.module.ModuleType;
 
 public enum JobAction {
     BREAK,

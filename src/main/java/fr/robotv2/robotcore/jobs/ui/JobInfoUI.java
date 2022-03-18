@@ -51,20 +51,15 @@ public class JobInfoUI implements GUI {
                 ItemStack keyItem = getKeyItem(key, action, money, exp);
                 if(keyItem == null) continue;
                 inv.setItem(count, keyItem);
-                ++count;
             }
         }
     }
 
     @Override
-    public void onClick(Player player, Inventory inv, ItemStack current, int slot, ClickType click) {
-
-    }
+    public void onClick(Player player, Inventory inv, ItemStack current, int slot, ClickType click) {}
 
     @Override
-    public void onClose(Player player, InventoryCloseEvent event) {
-
-    }
+    public void onClose(Player player, InventoryCloseEvent event) {}
 
     public ItemStack getEmpty() {
         if(this.empty == null)

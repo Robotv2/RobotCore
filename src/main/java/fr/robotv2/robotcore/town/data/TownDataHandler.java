@@ -1,32 +1,27 @@
-package fr.robotv2.robotcore.jobs.data;
+package fr.robotv2.robotcore.town.data;
 
-import fr.robotv2.robotcore.jobs.JobModule;
-import fr.robotv2.robotcore.jobs.data.stock.MysqlData;
-import fr.robotv2.robotcore.jobs.data.stock.SqlLiteData;
-import fr.robotv2.robotcore.jobs.data.stock.YamlData;
 import fr.robotv2.robotcore.shared.StringUtil;
 import fr.robotv2.robotcore.shared.data.DataType;
+import fr.robotv2.robotcore.town.TownModule;
+import fr.robotv2.robotcore.town.data.stock.MysqlData;
 import org.bukkit.configuration.file.FileConfiguration;
 
-public class DataHandler {
-
+public class TownDataHandler {
     private DataType dataType = DataType.SQLITE;
-    private JobData data;
+    private TownData data;
 
-    public void initializeStorage(JobModule jobModule, FileConfiguration configuration) {
+    public void initializeStorage(TownModule townModule, FileConfiguration configuration) {
         String DATA_TYPE = configuration.getString("storage.type");
         this.setDataType(DATA_TYPE);
         StringUtil.log("Data type for the job module: " + dataType.toString());
-        this.loadStorage(jobModule);
+        this.loadStorage(townModule);
     }
 
-    private void loadStorage(JobModule jobModule) {
+    private void loadStorage(TownModule townModule) {
         switch (dataType) {
-            case YAML -> data = new YamlData(jobModule);
-            case MYSQL -> data = new MysqlData(jobModule);
-            case SQLITE -> data = new SqlLiteData(jobModule);
+            case MYSQL -> new MysqlData();
         }
-        getData().load();
+        getData().init();
     }
 
     public void setDataType(DataType type) {
@@ -51,7 +46,7 @@ public class DataHandler {
         return dataType;
     }
 
-    public JobData getData() {
+    public TownData getData() {
         return data;
     }
 }

@@ -1,4 +1,4 @@
-package fr.robotv2.robotcore.shared.module;
+package fr.robotv2.robotcore.core.module;
 
 import org.bukkit.plugin.java.JavaPlugin;
 

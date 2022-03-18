@@ -169,6 +169,11 @@ public class ItemAPI {
             return this;
         }
 
+        public ItemBuilder setCustomModelData(int data) {
+            this.meta.setCustomModelData(data);
+            return this;
+        }
+
         public ItemStack build() {
             if(this.type == null)
                 type = Material.AIR;

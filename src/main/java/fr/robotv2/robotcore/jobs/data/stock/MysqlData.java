@@ -6,7 +6,6 @@ import fr.robotv2.robotcore.jobs.data.JobData;
 import fr.robotv2.robotcore.jobs.impl.job.Job;
 import fr.robotv2.robotcore.jobs.impl.job.JobId;
 import fr.robotv2.robotcore.shared.OfflineAPI;
-import org.bukkit.Bukkit;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

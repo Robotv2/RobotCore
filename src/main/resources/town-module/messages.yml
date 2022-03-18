@@ -1,0 +1,24 @@
+not-player: "&c[&c&l!&c] Commande impossible depuis la console."
+not-chef: "&cVous devez être le chef de la ville pour faire cela."
+
+not-in-town: "&cVous n'êtes pas dans une ville."
+in-town: "&cVous êtes déjà dans une ville."
+name-already-taken: "&cCe nom de ville existe déjà."
+
+no-current-invit: "&cVous n'avez aucune invitation en cours."
+
+town-created: "&aVous venez de créer une nouvelle ville !"
+town-deleted: "&cVous venez de supprimer votre ville."
+
+player-invited: "&aVous venez d'inviter un nouveau joueur avec succès."
+player-kicked: "&aVous venez de virer un joueur avec succès."
+
+targeted-player:
+  not-online: "&cLe joueur visé n'est pas en ligne ou n'existe pas."
+  already-in-town: "&cLe joueur visé est déjà dans une ville."
+  not-in-your-town: "&cLe joueur visé n'est pas dans votre ville."
+  already-an-invite: "&cLe joueur visé à déjà une invitation en cours."
+
+claim:
+  already-claimed: "&cCette zone est déjà claim."
+  claimed-successfully: "&aVous venez de claim cette zone."
