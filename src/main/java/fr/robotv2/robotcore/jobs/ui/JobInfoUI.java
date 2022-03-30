@@ -2,10 +2,10 @@ package fr.robotv2.robotcore.jobs.ui;
 
 import fr.robotv2.robotcore.jobs.impl.job.Job;
 import fr.robotv2.robotcore.jobs.impl.job.JobAction;
+import fr.robotv2.robotcore.shared.TranslationAPI;
 import fr.robotv2.robotcore.shared.item.HeadUtil;
 import fr.robotv2.robotcore.shared.item.ItemAPI;
 import fr.robotv2.robotcore.shared.ui.GUI;
-import net.md_5.bungee.api.chat.TranslatableComponent;
 import org.bukkit.Material;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
@@ -15,6 +15,8 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.Locale;
 
 public class JobInfoUI implements GUI {
 
@@ -48,7 +50,7 @@ public class JobInfoUI implements GUI {
                 if(valueSection == null) continue;
                 double money = valueSection.getDouble("money");
                 double exp = valueSection.getDouble("exp");
-                ItemStack keyItem = getKeyItem(key, action, money, exp);
+                ItemStack keyItem = getKeyItem(player, key, action, money, exp);
                 if(keyItem == null) continue;
                 inv.setItem(count, keyItem);
             }
@@ -67,7 +69,7 @@ public class JobInfoUI implements GUI {
         return this.empty;
     }
 
-    public ItemStack getKeyItem(String value, JobAction action, double money, double exp) {
+    public ItemStack getKeyItem(Player player, String value, JobAction action, double money, double exp) {
         value = value.toUpperCase();
         String key = null;
         ItemStack item = null;
@@ -89,7 +91,7 @@ public class JobInfoUI implements GUI {
             return null;
 
         ItemAPI.ItemBuilder builder = ItemAPI.toBuilder(item);
-        return builder.setName("&8» &e" + this.getNameFromKey(key))
+        return builder.setName("&8» &e" + this.getNameFromKey(player, key))
                 .setLore(
                         "&8&m&l-----------",
                         "&eAction &8- &f" + action.getTranslation(),
@@ -98,8 +100,8 @@ public class JobInfoUI implements GUI {
                         "&8&m&l-----------").build();
     }
 
-    private String getNameFromKey(String key) {
-        String translation = new TranslatableComponent(key).toLegacyText();
+    private String getNameFromKey(Player player, String key) {
+        String translation = TranslationAPI.translate(Locale.ENGLISH, key) != null ? TranslationAPI.translate(Locale.ENGLISH, key) : "unknown";
         return translation.substring(0, 1).toUpperCase() + translation.substring(1);
     }
 }

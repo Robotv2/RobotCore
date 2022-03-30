@@ -1,2 +1,4 @@
 modules:
   job: false
+  town: false
+  shop: false

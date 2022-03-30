@@ -1,6 +1,7 @@
 package fr.robotv2.robotcore.town.data;
 
 import fr.robotv2.robotcore.town.impl.Parcelle;
+import fr.robotv2.robotcore.town.impl.Town;
 import org.bukkit.Chunk;
 import org.bukkit.OfflinePlayer;
 
@@ -34,7 +35,7 @@ public interface TownData {
     Set<Parcelle> getParcelles(UUID townUUID);
     void setParcelle(Set<Parcelle> parcelles, UUID townUUID);
 
-    void createTown(UUID townUUID, UUID playerUUID, String name);
+    Town createTown(UUID townUUID, UUID playerUUID, String name);
     void deleteTown(UUID townUUID);
 
     boolean needAsync();

@@ -29,6 +29,10 @@ public class TownManager {
         towns.remove(townUUID);
     }
 
+    public void loadTown(Town town) {
+        towns.put(town.getTownUUID(), town);
+    }
+
     public void loadTown(UUID townUUID) {
         TownData data = townModule.getDataHandler().getData();
         TaskUtil.runTask(() -> {
@@ -43,6 +47,7 @@ public class TownManager {
             towns.put(townUUID, town);
 
             StringUtil.log("&fData for the town &e" + name + "&f successfully loaded.");
+            StringUtil.log(town.toString());
 
         }, data.needAsync());
     }
@@ -57,6 +62,16 @@ public class TownManager {
             data.setMembers(town.getMembers(), townUUID);
             data.setBank(town.getBank(), townUUID);
             data.setTerritories(town.getTerritories(), townUUID);
+
+        }, data.needAsync());
+    }
+
+    public void createTown(UUID townUUID, UUID chefUUID, String name) {
+        TownData data = townModule.getDataHandler().getData();
+        TaskUtil.runTask(() -> {
+
+            Town town = data.createTown(townUUID, chefUUID, name);
+            this.loadTown(town);
 
         }, data.needAsync());
     }

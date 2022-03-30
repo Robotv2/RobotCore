@@ -5,6 +5,7 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.annotation.Syntax;
+import fr.robotv2.robotcore.shared.StringUtil;
 import fr.robotv2.robotcore.town.TownModule;
 import fr.robotv2.robotcore.town.impl.Town;
 import org.bukkit.entity.Player;
@@ -26,17 +27,17 @@ public class TownCommand extends BaseCommand {
     public void onCreate(Player player, String townNAME) {
 
         if(module.getPlayerManager().isInTown(player)) {
-            module.getTownMessage().sendMessage(player, "in-town");
+            module.getTownMessage().sendPath(player, "in-town");
             return;
         }
 
         if(module.getTownManager().getTown(townNAME).isPresent()) {
-            module.getTownMessage().sendMessage(player, "name-already-taken");
+            module.getTownMessage().sendPath(player, "name-already-taken");
             return;
         }
 
-        module.getDataHandler().getData().createTown(UUID.randomUUID(), player.getUniqueId(), townNAME);
-        module.getTownMessage().sendMessage(player, "town-created");
+        module.getTownManager().createTown(UUID.randomUUID(), player.getUniqueId(), townNAME);
+        module.getTownMessage().sendPath(player, "town-created");
     }
 
     @Subcommand("delete")
@@ -45,18 +46,38 @@ public class TownCommand extends BaseCommand {
         Optional<Town> optionalTown = module.getPlayerManager().getTown(player);
 
         if(optionalTown.isEmpty()) {
-            module.getTownMessage().sendMessage(player, "not-in-town");
+            module.getTownMessage().sendPath(player, "not-in-town");
             return;
         }
 
         Town town = optionalTown.get();
 
         if(!town.isChef(player)) {
-            module.getTownMessage().sendMessage(player, "not-chef");
+            module.getTownMessage().sendPath(player, "not-chef");
             return;
         }
 
         module.getDataHandler().getData().deleteTown(town.getTownUUID());
-        module.getTownMessage().sendMessage(player, "town-deleted");
+        module.getTownManager().unloadTown(town.getTownUUID(), false);
+        module.getTownMessage().sendPath(player, "town-deleted");
+    }
+
+    @Subcommand("info")
+    @CommandPermission("robotcore.town.command.info")
+    public void onInfo(Player player) {
+        Optional<Town> optionalTown = module.getPlayerManager().getTown(player);
+
+        if(optionalTown.isEmpty()) {
+            module.getTownMessage().sendPath(player, "not-in-town");
+            return;
+        }
+
+        Town town = optionalTown.get();
+
+        StringUtil.sendMessage(player, "&8&m&l--------", false);
+        StringUtil.sendMessage(player, "&7Nom: &e" + town.getName(), false);
+        StringUtil.sendMessage(player, "&7Chef: &e" + town.getChef().getName(), false);
+        StringUtil.sendMessage(player, "&7Solde: &e" + town.getBank() + "$", false);
+        StringUtil.sendMessage(player, "&8&m&l--------", false);
     }
 }

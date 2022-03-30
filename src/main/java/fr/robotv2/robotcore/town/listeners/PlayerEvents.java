@@ -26,6 +26,7 @@ public class PlayerEvents extends TownListener {
         TaskUtil.runTask(() -> {
 
             UUID townUUID = data.getTownUUID(player.getUniqueId());
+            System.out.println("Player " + player.getName() + " detected with the town: " + townUUID);
 
             if(townUUID != null && !manager.isLoaded(townUUID)) {
                 manager.loadTown(townUUID);

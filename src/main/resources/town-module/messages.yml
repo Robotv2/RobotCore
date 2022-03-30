@@ -1,3 +1,5 @@
+prefix: "&d&lTOWN &8- "
+
 not-player: "&c[&c&l!&c] Commande impossible depuis la console."
 not-chef: "&cVous devez être le chef de la ville pour faire cela."
 

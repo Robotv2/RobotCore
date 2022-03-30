@@ -11,9 +11,10 @@ import java.util.Optional;
 
 public abstract class TownListener implements Listener {
 
-    private TownModule townModule;
+    private final TownModule townModule;
     public TownListener(TownModule townModule) {
         townModule.getPlugin().getServer().getPluginManager().registerEvents(this, townModule.getPlugin());
+        this.townModule = townModule;
     }
 
     public TownModule getTownModule() {

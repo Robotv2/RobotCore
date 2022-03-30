@@ -94,7 +94,7 @@ public class Town {
     }
 
     public boolean isMember(OfflinePlayer offlinePlayer) {
-        return this.members.contains(offlinePlayer);
+        return this.members.contains(offlinePlayer) || this.isChef(offlinePlayer);
     }
 
     public void addMember(OfflinePlayer offlinePlayer) {
@@ -133,5 +133,22 @@ public class Town {
                 StringUtil.sendMessage(player, message, false);
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        return "{town:" +
+                "{UUID:" + townUUID + "};" +
+                "{NAME:" + name + "};" +
+                "{BANK:" + bank + "};" +
+                "{CHEF:" + chef.getUniqueId() + "};" +
+                "{MEMBERS:" + members.toString() + "};}";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if(!(o instanceof Town town))
+            return false;
+        return Objects.equals(this.getTownUUID(), town.getTownUUID());
     }
 }

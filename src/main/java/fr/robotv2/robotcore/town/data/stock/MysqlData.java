@@ -4,6 +4,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import fr.robotv2.robotcore.shared.serializer.ChunkSerializer;
 import fr.robotv2.robotcore.town.data.TownData;
 import fr.robotv2.robotcore.town.impl.Parcelle;
+import fr.robotv2.robotcore.town.impl.Town;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.OfflinePlayer;
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
 
 public class MysqlData implements TownData {
 
-    private HikariDataSource source;
+    protected HikariDataSource source;
 
     //TABLES
     private final String TOWN_TABLE = "robotcore_town_towns";
@@ -33,7 +34,7 @@ public class MysqlData implements TownData {
     private void createTownTable() {
         try (Connection connection = getConnection()) {
             PreparedStatement ps = connection.prepareStatement(
-                    "CREATE TABLE IF NOT EXISTS " + TOWN_TABLE + " ('UUID' VARCHAR(50), 'NAME' VARCHAR(50), 'CHEF_UUID' VARCHAR(100), 'BANK' DOUBLE");
+                    "CREATE TABLE IF NOT EXISTS " + TOWN_TABLE + " ('UUID' VARCHAR(50), 'NAME' VARCHAR(50), 'CHEF_UUID' VARCHAR(100), 'BANK' DOUBLE)");
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -43,7 +44,7 @@ public class MysqlData implements TownData {
     private void createPlayersTable() {
         try (Connection connection = getConnection()) {
             PreparedStatement ps = connection.prepareStatement(
-                    "CREATE TABLE IF NOT EXISTS " + PLAYER_TABLE + " ('PLAYER_UUID' VARCHAR(50), 'TOWN' VARCHAR(50)");
+                    "CREATE TABLE IF NOT EXISTS " + PLAYER_TABLE + " ('PLAYER_UUID' VARCHAR(50), 'TOWN' VARCHAR(50))");
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -53,7 +54,7 @@ public class MysqlData implements TownData {
     private void createTerritoryTable() {
         try (Connection connection = getConnection()) {
             PreparedStatement ps = connection.prepareStatement(
-                    "CREATE TABLE IF NOT EXISTS " + TERRITORY_TABLE + " ('TERRITORY' VARCHAR(50), 'TOWN' VARCHAR(50)");
+                    "CREATE TABLE IF NOT EXISTS " + TERRITORY_TABLE + " ('TERRITORY' VARCHAR(50), 'TOWN' VARCHAR(50))");
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -81,6 +82,8 @@ public class MysqlData implements TownData {
     public UUID getTownUUID(UUID playerUUID) {
         try (Connection connection = getConnection()) {
 
+            System.out.println(playerUUID);
+
             PreparedStatement ps = connection.prepareStatement("SELECT TOWN FROM " + PLAYER_TABLE + " WHERE 'PLAYER_UUID'=?");
             ps.setString(1, playerUUID.toString());
             ResultSet result = ps.executeQuery();
@@ -104,10 +107,12 @@ public class MysqlData implements TownData {
 
             if(townUUID != null) {
                 if(getTownUUID(playerUUID) == null) {
-                    ps = connection.prepareStatement("INSERT INTO " + PLAYER_TABLE + " VALUE('?', '?')");
+                    System.out.println("INSERT");
+                    ps = connection.prepareStatement("INSERT INTO " + PLAYER_TABLE + " VALUES (?, ?)");
                     ps.setString(1, playerUUID.toString());
                     ps.setString(2, townUUID.toString());
                 } else {
+                    System.out.println("UPDATE");
                     ps = connection.prepareStatement("UPDATE " + PLAYER_TABLE + " SET TOWN=? WHERE 'PLAYER_UUID'=?");
                     ps.setString(1, townUUID.toString());
                     ps.setString(2, playerUUID.toString());
@@ -193,7 +198,7 @@ public class MysqlData implements TownData {
 
         try (Connection connection = getConnection()) {
 
-            PreparedStatement ps = connection.prepareStatement("SELECT PLAYER_UUID FROM " + TOWN_TABLE + " WHERE 'TOWN'=?");
+            PreparedStatement ps = connection.prepareStatement("SELECT PLAYER_UUID FROM " + PLAYER_TABLE + " WHERE 'TOWN'=?");
             ps.setString(1, townUUID.toString());
             ResultSet result = ps.executeQuery();
 
@@ -327,19 +332,26 @@ public class MysqlData implements TownData {
     }
 
     @Override
-    public void createTown(UUID townUUID, UUID playerUUID, String name) {
+    public Town createTown(UUID townUUID, UUID playerUUID, String name) {
         try (Connection connection = getConnection()) {
 
-            PreparedStatement ps = connection.prepareStatement("INSERT INTO " + TOWN_TABLE + " VALUES('?', '?', '?', '?')");
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO " + TOWN_TABLE + " VALUES (?, ?, ?, ?)");
             ps.setString(1, townUUID.toString());
             ps.setString(2, name);
             ps.setString(3, playerUUID.toString());
             ps.setDouble(4, 0);
             ps.executeUpdate();
 
+            this.setTown(playerUUID, townUUID);
+            OfflinePlayer chef = Bukkit.getOfflinePlayer(playerUUID);
+
+            return new Town(townUUID, name, 0, chef, new ArrayList<>(), new HashSet<>());
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return null;
     }
 
     @Override

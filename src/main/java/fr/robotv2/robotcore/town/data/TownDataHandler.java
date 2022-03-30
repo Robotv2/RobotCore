@@ -4,6 +4,7 @@ import fr.robotv2.robotcore.shared.StringUtil;
 import fr.robotv2.robotcore.shared.data.DataType;
 import fr.robotv2.robotcore.town.TownModule;
 import fr.robotv2.robotcore.town.data.stock.MysqlData;
+import fr.robotv2.robotcore.town.data.stock.SqlLiteData;
 import org.bukkit.configuration.file.FileConfiguration;
 
 public class TownDataHandler {
@@ -11,15 +12,16 @@ public class TownDataHandler {
     private TownData data;
 
     public void initializeStorage(TownModule townModule, FileConfiguration configuration) {
-        String DATA_TYPE = configuration.getString("storage.type");
-        this.setDataType(DATA_TYPE);
+        //String DATA_TYPE = configuration.getString("storage.type");
+        this.setDataType("");
         StringUtil.log("Data type for the job module: " + dataType.toString());
         this.loadStorage(townModule);
     }
 
     private void loadStorage(TownModule townModule) {
         switch (dataType) {
-            case MYSQL -> new MysqlData();
+            case MYSQL -> data = new MysqlData();
+            case SQLITE -> data = new SqlLiteData(townModule);
         }
         getData().init();
     }
