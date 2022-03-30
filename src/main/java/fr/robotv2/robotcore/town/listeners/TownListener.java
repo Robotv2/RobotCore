@@ -29,7 +29,6 @@ public abstract class TownListener implements Listener {
             return false;
 
         Town town = optionalTown.get();
-        town.isMember(player);
 
         if(town.isMember(player))
             return false;

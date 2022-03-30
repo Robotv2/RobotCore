@@ -1,0 +1,10 @@
+gui:
+  cant-sign: "&c✗"
+  item:
+    name: "&8> &3%type%"
+    lore:
+      - "&8"
+      - "&aBuy: %buy-price%"
+      - "&cSell: %sell-price"
+      - "&7Quantity: %quantity%"
+      - "&8"

@@ -6,6 +6,7 @@ import fr.robotv2.robotcore.shared.TranslationAPI;
 import fr.robotv2.robotcore.shared.item.HeadUtil;
 import fr.robotv2.robotcore.shared.item.ItemAPI;
 import fr.robotv2.robotcore.shared.ui.GUI;
+import net.md_5.bungee.api.chat.TranslatableComponent;
 import org.bukkit.Material;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
@@ -15,8 +16,6 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.Locale;
 
 public class JobInfoUI implements GUI {
 
@@ -91,7 +90,7 @@ public class JobInfoUI implements GUI {
             return null;
 
         ItemAPI.ItemBuilder builder = ItemAPI.toBuilder(item);
-        return builder.setName("&8» &e" + this.getNameFromKey(player, key))
+        return builder.setName("&8» &e" + this.getNameFromKey(key))
                 .setLore(
                         "&8&m&l-----------",
                         "&eAction &8- &f" + action.getTranslation(),
@@ -100,8 +99,8 @@ public class JobInfoUI implements GUI {
                         "&8&m&l-----------").build();
     }
 
-    private String getNameFromKey(Player player, String key) {
-        String translation = TranslationAPI.translate(Locale.ENGLISH, key) != null ? TranslationAPI.translate(Locale.ENGLISH, key) : "unknown";
+    private String getNameFromKey(String key) {
+        String translation = TranslationAPI.translate(key);
         return translation.substring(0, 1).toUpperCase() + translation.substring(1);
     }
 }

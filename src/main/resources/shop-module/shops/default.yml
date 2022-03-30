@@ -1,0 +1,9 @@
+name: "&7Default"
+slot: 54
+items:
+  diamond_sword_1:
+    material: DIAMOND_SWORD
+    quantity: 1
+    sell-price: 100
+    buy-price: 1000
+    slot: 13
